@@ -10,7 +10,11 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
 
   3. Added git ignore file (.gitignore) to avoid commiting object files to the repository.
 
+  4. Added begginnings of doxygen automatic documentation generation.
+
 ## Thoughts and TODOs
   * The make file is really written only for facilitating unit tests and not releases.
 
   * The code in the compilation unit_test.cpp is taken verbatim from the [first lazyfoo SDL2 tutorial](https://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php).
+
+  * The documentation is not quite generating as expected. Need to refer to previous uses to see if there is something obvious I forgot.
