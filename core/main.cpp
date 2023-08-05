@@ -1,9 +1,10 @@
-/** @author Autin (SV-Engineer)
+/** @file main.cpp
+ * @author Autin (SV-Engineer)
  * @brief The main entry point.
  * 
  * @par This file contains the main entry point for the engine and will be used for testing purposes.
  * There is an expectation that a function pointer will be defined so as to be able to choose between
- * the main and unit tests.
+ * the main release and unit tests.
  */
 
 extern int (*func_ptr)(void);
