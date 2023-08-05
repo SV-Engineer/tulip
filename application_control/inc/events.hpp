@@ -7,3 +7,10 @@
  */
 
 #pragma once
+  // Dependencies
+  #include <stdbool.h>
+  #include <SDL.h>
+
+  // Function declarations
+  SDL_Event* CreateEvent(void);
+  bool PollEvent(SDL_Event* e);

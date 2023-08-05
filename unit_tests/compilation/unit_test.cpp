@@ -1,4 +1,5 @@
-/** @author Autin (SV-Engineer)
+/** @file compilation/unit_test.cpp
+ * @author Autin (SV-Engineer)
  * @brief The unit test for compilation.
  * 
  * @par This file contains the unit test used to ensure the SDL2 libraries can be compiled.

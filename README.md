@@ -12,6 +12,9 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
 
   4. Added begginnings of doxygen automatic documentation generation.
 
+  5. Added application control directory.
+      * Rudimentary event handling.
+
 ## Thoughts and TODOs
   * The make file is really written only for facilitating unit tests and not releases.
 
