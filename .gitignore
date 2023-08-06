@@ -3,4 +3,6 @@
 ./doc/tulip_doxy_cfg.bak
 ./doc/latex/
 ./doc/latex/*
+./doc/html
+./doc/html/*
 .vscode
