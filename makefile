@@ -1,7 +1,8 @@
 # First setup the miscellaneous variables required for easy maintenance.
-MAIN_SRC_DIR							= ./core
+CORE_DIR									= ./core
 UNIT_TESTS_SRC_DIR				= ./unit_tests
 OUTPUT_DIR								= ./obj
+APP_CTRL_SRC							= ./application_control/src
 
 # Compiler used
 CC												= g++
@@ -10,11 +11,12 @@ CC												= g++
 CC_ARGS										= -c
 
 # include directories
-INC_DIRS									= ./core/SDL2_Latest/i686-w64-mingw32/include/SDL2 \
-														./application_control/inc
+INC_DIRS									= -I ./core/SDL2_Latest/i686-w64-mingw32/include/SDL2 \
+														-I ./application_control/inc/
 
 # directory of libraries to link to
-LINK_DIRS									= ./core/SDL2_Latest//i686-w64-mingw32/bin/
+LINK_DIRS									= -L ./core/SDL2_Latest/i686-w64-mingw32/bin/ \
+														-L ./obj/
 
 # directory of libraries to link to
 LINK_LIBS									= -l mingw32 \
@@ -26,14 +28,32 @@ LINK_LIBS									= -l mingw32 \
 # directory).
 UNIT_TEST = $(UT)
 
+DEPS_LIST = renderer \
+						events
+
+OBJ_FILES = ./obj/renderer.o \
+						./obj/events.o \
+						./obj/run_engine.o
+
 # Compile and output
-all: engine.exe
+all: run_engine engine
 
-events.o:
-	$(CC) $(CC_ARGS) -I $(INC_DIRS) -L $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@
+renderer:
+	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
-func.o:
-	$(CC) $(CC_ARGS) -I $(INC_DIRS) -L $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@
+events:
+	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
-engine.exe: events.o func.o
-	$(CC) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/unit_test.cpp $(MAIN_SRC_DIR)/main.cpp -I $(INC_DIRS) -L $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@
+run_engine: $(DEPS_LIST)
+	$(CC) $(CC_ARGS) $(CORE_DIR)/common/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+
+all_unit_test: unit_test engine
+
+unit_test: $(DEPS_LIST)
+	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
+
+engine: 
+	$(CC) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe
+
+clean:
+	-rm ./obj/*.o ./obj/engine.exe
