@@ -35,18 +35,21 @@ bool PollEvent(SDL_Event* e)
 {
   bool quit = false;
 
-  while(SDL_PollEvent(e))
+  while(!quit)
   {
-    switch (e->type)
+    while(SDL_PollEvent(e))
     {
-      case(SDL_QUIT):
-        quit = true;
-        // Deallocate object from the heap
-        delete e;
-        break;
+      switch (e->type)
+      {
+        case(SDL_QUIT):
+          quit = true;
+          // Deallocate object from the heap
+          delete e;
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 
