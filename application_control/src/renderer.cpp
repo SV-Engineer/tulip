@@ -14,16 +14,38 @@
 
 static sdl_renderer_t hlp_CreateWindow(void);
 
+/** @fn SDL_WindowRenderer* create_renderer(void)
+ * @brief This instantiates and returns a pointer to a heap
+ * allocated class containging an SDL window and surface.
+ * 
+ * @return SDL_WindowRenderer*
+ * A pointer to a heap allocated class for window handling.
+ */
 SDL_WindowRenderer* create_renderer(void)
 {
   return (new SDL_WindowRenderer(hlp_CreateWindow()));
-}
+} /* create_renderer */
 
+/** @fn void kill_renderer(SDL_WindowRenderer* renderer)
+ * @brief This destroys the window handling class.
+ * 
+ * @param renderer
+ * The object created to handle the SDL window.
+ * 
+ * @return void
+ */
 void kill_renderer(SDL_WindowRenderer* renderer)
 {
   delete renderer;
-}
+} /* kill_renderer */
 
+/** @fn static sdl_renderer_t hlp_CreateWindow(void)
+ * @brief This creates and returns the SDL window pointer.
+ * 
+ * 
+ * @return sdl_renderer_t
+ * Contains pointers to the sdl window and associated surface.
+ */
 static sdl_renderer_t hlp_CreateWindow(void)
 {
   // Declare objects
@@ -65,4 +87,4 @@ static sdl_renderer_t hlp_CreateWindow(void)
       return w;
     }
   }
-}
+} /* hlp_CreateWindow */
