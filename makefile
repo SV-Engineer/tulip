@@ -52,8 +52,8 @@ all_unit_test: unit_test engine
 unit_test: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 
-engine: 
+engine:
 	$(CC) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe
 
-clean:
+.PHONY clean:
 	-rm ./obj/*.o ./obj/engine.exe
