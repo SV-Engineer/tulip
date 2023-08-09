@@ -14,6 +14,6 @@
 
   // Function declarations
   SDL_Event* CreateEvent(void);
-  bool PollEvent(SDL_Event* e);
+  void PollEvent(SDL_Event* e);
 
 #endif /* TULIP_EVENTS_H_ */

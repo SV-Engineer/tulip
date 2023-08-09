@@ -12,7 +12,8 @@ CC_ARGS										= -c
 
 # include directories
 INC_DIRS									= -I ./core/SDL2_Latest/i686-w64-mingw32/include/SDL2 \
-														-I ./application_control/inc/
+														-I ./application_control/inc/ \
+														-I ./debug/inc/
 
 # directory of libraries to link to
 LINK_DIRS									= -L ./core/SDL2_Latest/i686-w64-mingw32/bin/ \

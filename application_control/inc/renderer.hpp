@@ -9,44 +9,48 @@
 
 #ifndef TULIP_RENDERER_H_
   #define TULIP_RENDERER_H_
+  #define DEBUG
   // Dependencies.
   #include <SDL.h>
+  #include <debug.hpp>
 
-  #define DEBUG
-  #ifdef DEBUG
-    #include <string>
-    #include <iostream>
-    #define INFO(X)         std::cout << "*INFO: " #X << std::endl
-    #define ERR(X,Y)        std::cout << "*ERR: "  #X << Y << std::endl
-  #else
-    #define INFO(X)
-    #define ERR(X,Y)
-  #endif
+  // Macro Definitions
+  #define WINDOWED_SCREEN_WIDTH    640
+  #define WINDOWED_SCREEN_HEIGHT   480
 
-  // Types and objects
-  
-  typedef struct sdl_renderer {
-    SDL_Window*  window;
-    SDL_Surface* surface;
-  } sdl_renderer_t;
-
-  class SDL_WindowRenderer
+  // Types, Objects and Classes
+  class Screen
   {
     private:
-      sdl_renderer_t renderer;
+      SDL_Window*  window;
+      SDL_Surface* surface;
 
     public:
       // Class constructor
-      SDL_WindowRenderer(sdl_renderer_t r)
+      Screen(void)
       {
-        renderer = r;
+        if(SDL_Init(SDL_INIT_VIDEO) < 0)
+        {
+          ERR("SDL could not initialize! SDL_Error: ", SDL_GetError());
+        }
+
+        else
+        {
+          // Create a window and get its surface.
+          window = SDL_CreateWindow("tulip-engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOWED_SCREEN_WIDTH, WINDOWED_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+          surface = SDL_GetWindowSurface(window);
+          //Fill the surface black
+          SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x00, 0x00, 0x00));
+          //Update the surface
+          SDL_UpdateWindowSurface(window);
+        }
       }
 
       // Class destructor
-      ~SDL_WindowRenderer(void)
+      ~Screen(void)
       {
         //Destroy window
-        SDL_DestroyWindow(renderer.window);
+        SDL_DestroyWindow(window);
         //Quit SDL subsystems
         SDL_Quit();
       }
@@ -54,13 +58,13 @@
       // Object retrieval
       SDL_Window* Get_sdl_window(void)
       {
-        return renderer.window;
+        return window;
       }
 
-  }; /* SDL_WindowRenderer */
+  }; /* Screen */
 
   // Function declarations.
-  SDL_WindowRenderer* create_renderer(void);
-  void kill_renderer(SDL_WindowRenderer* renderer);
+  Screen* create_renderer(void);
+  void kill_renderer(Screen* renderer);
 
 #endif /* TULIP_RENDERER_H_ */

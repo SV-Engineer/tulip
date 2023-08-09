@@ -15,8 +15,12 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
   5. Added application control directory.
       * Rudimentary event handling.
 
+  6. Added debug directory for debug macro definitions.
+
+  7. Created a basic class wrapper for the SDL Window creation and handling. Initially the objects were created and passed to the class constructor. It made more sense to put the object instantation into the constructor and have a function that instantiated the class and did some error checking.
+
 ## Thoughts and TODOs
-  * The make file is really written only for facilitating unit tests and not releases.
+  * ~~The make file is really written only for facilitating unit tests and not releases~~.
 
   * The code in the compilation unit_test.cpp is taken verbatim from the [first lazyfoo SDL2 tutorial](https://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php).
 

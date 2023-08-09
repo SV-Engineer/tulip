@@ -3,7 +3,7 @@
  * @brief The source file for tulip event handling.
  * 
  * @par This file contains the event handling for the tulip game engine.
- * At this time for sanity checking purposes it serves to create and event
+ * At this time for sanity checking purposes it serves to create an event
  * and also poll it to check for the quit request.
  * 
  */
@@ -31,7 +31,7 @@ SDL_Event* CreateEvent(void)
  * @return false
  * do not terminate program
  */
-bool PollEvent(SDL_Event* e)
+void PollEvent(SDL_Event* e)
 {
   bool quit = false;
 
@@ -52,6 +52,4 @@ bool PollEvent(SDL_Event* e)
       }
     }
   }
-
-  return quit;
 } /* PollEvent */
