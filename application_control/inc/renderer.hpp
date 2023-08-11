@@ -15,8 +15,8 @@
   #include <debug.hpp>
 
   // Macro Definitions
-  #define WINDOWED_SCREEN_WIDTH    640
-  #define WINDOWED_SCREEN_HEIGHT   480
+  #define DEFAULT_WINDOWED_SCREEN_WIDTH    640
+  #define DEFAULT_WINDOWED_SCREEN_HEIGHT   480
 
   // Types, Objects and Classes
   class Screen
@@ -32,19 +32,21 @@
         if(SDL_Init(SDL_INIT_VIDEO) < 0)
         {
           ERR("SDL could not initialize! SDL_Error: ", SDL_GetError());
+          window  = NULL;
+          surface = NULL;
         }
 
         else
         {
           // Create a window and get its surface.
-          window = SDL_CreateWindow("tulip-engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOWED_SCREEN_WIDTH, WINDOWED_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+          window = SDL_CreateWindow("tulip-engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DEFAULT_WINDOWED_SCREEN_WIDTH, DEFAULT_WINDOWED_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
           surface = SDL_GetWindowSurface(window);
           //Fill the surface black
           SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x00, 0x00, 0x00));
           //Update the surface
           SDL_UpdateWindowSurface(window);
         }
-      }
+      } /* constructor */
 
       // Class destructor
       ~Screen(void)
@@ -53,13 +55,13 @@
         SDL_DestroyWindow(window);
         //Quit SDL subsystems
         SDL_Quit();
-      }
+      } /* destructor */
 
       // Object retrieval
       SDL_Window* Get_sdl_window(void)
       {
         return window;
-      }
+      } /* Get_sdl_window */
 
   }; /* Screen */
 
