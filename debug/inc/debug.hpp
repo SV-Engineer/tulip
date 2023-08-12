@@ -16,9 +16,11 @@
       #include <string>
       #include <iostream>
       #define INFO(X)         std::cout << "*INFO: " #X << std::endl
-      #define ERR(X,Y)        std::cout << "*ERR: "  #X << Y << std::endl
+      #define WARN(X)         std::cout << "*WARN: " #X << std::endl
+      #define ERR(X,Y)        std::cout << "**ERR: " #X << Y << std::endl
     #else
       #define INFO(X)
+      #define WARN(X)
       #define ERR(X,Y)
     #endif
 

@@ -25,3 +25,5 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
   * The code in the compilation unit_test.cpp is taken verbatim from the [first lazyfoo SDL2 tutorial](https://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php).
 
   * The documentation is not quite generating as expected. Need to refer to previous uses to see if there is something obvious I forgot.
+
+  * TIL that initializing a struct with empty curly braces is a succinct way of guaranteeing all members are initialized to default values. I.e an 'int' type would be initialized to a value of `0` while a 'float' or 'double' will be initialized to a value of `0.0`.

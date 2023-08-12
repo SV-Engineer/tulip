@@ -23,9 +23,9 @@ Screen* create_renderer(void)
 {
   Screen* screen = new Screen();
 
-  if (screen->Get_sdl_window() == NULL)
+  if ((screen->Get_sdl_window() == NULL) || (screen->Get_sdl_renderer() == NULL))
   {
-    ERR("Window could not be created! SDL_Error: ", SDL_GetError());
+    ERR("Window or renderer could not be created! SDL_Error: ", SDL_GetError());
     kill_renderer(screen);
     return NULL;
   }
