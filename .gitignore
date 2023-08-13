@@ -1,8 +1,8 @@
-./obj/*.exe
-./obj/*.o
-./doc/tulip_doxy_cfg.bak
-./doc/latex/
-./doc/latex/*
-./doc/html
-./doc/html/*
+obj/*.exe
+obj/*.o
+doc/tulip_doxy_cfg.bak
+doc/latex/
+doc/latex/*
+doc/html
+doc/html/*
 .vscode
