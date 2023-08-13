@@ -1,7 +1,12 @@
 # tulip
 A 2-D game engine based upon SDL2. This attempt will try to incorporate the composition approach and may still use inheritance if and when it makes sense.
 
-# Patch notes v0p0
+# Patch notes v0.0.1
+
+## New Features
+  1. Added direct3D 11 to the SDL initialization.
+
+# Patch notes v0.0.0
 
 ## New features
   1. Added all files for compilation of SDL2.
@@ -19,7 +24,7 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
 
   7. Created a basic class wrapper for the SDL Window creation and handling. Initially the objects were created and passed to the class constructor. It made more sense to put the object instantation into the constructor and have a function that instantiated the class and did some error checking.
 
-## Thoughts and TODOs
+# Thoughts and TODOs
   * ~~The make file is really written only for facilitating unit tests and not releases~~.
 
   * The code in the compilation unit_test.cpp is taken verbatim from the [first lazyfoo SDL2 tutorial](https://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php).
