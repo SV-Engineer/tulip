@@ -54,7 +54,7 @@
           if (r_info.name == std::string("direct3d11"))
           {
             INFO("direct3d11 found");
-            r = SDL_CreateRenderer(w, i , 0);
+            r = SDL_CreateRenderer(w, i , SDL_RENDERER_ACCELERATED);
             break;
           }
 
@@ -65,8 +65,17 @@
           }
         }
 
-        // Return the pointer. The initialization function will do error checking.
-        return r;
+        if (r != NULL)
+        {
+          SDL_SetRenderDrawColor(r, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0xFF);
+          // Return the pointer. The initialization function will do error checking.
+          return r;
+        }
+
+        else
+        {
+          return r;
+        }
       }
 
     public:
