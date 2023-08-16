@@ -1,5 +1,6 @@
 # First setup the miscellaneous variables required for easy maintenance.
 CORE_DIR									= ./core
+COMMON_DIR								= $(CORE_DIR)/common
 UNIT_TESTS_SRC_DIR				= ./unit_tests
 OUTPUT_DIR								= ./obj
 APP_CTRL_SRC							= ./application_control/src
@@ -8,7 +9,9 @@ APP_CTRL_SRC							= ./application_control/src
 CC												= g++
 
 # Compiler arguments
-CC_ARGS										= -c
+MAIN_CC_ARGS							= -std=c++17
+CC_ARGS										= $(MAIN_CC_ARGS) -c
+
 
 # include directories
 INC_DIRS									= -I ./core/SDL2_Latest/i686-w64-mingw32/include/SDL2 \
@@ -54,7 +57,7 @@ unit_test: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 
 engine:
-	$(CC) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe
+	$(CC) $(MAIN_CC_ARGS) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe
 
-.PHONY clean:
-	-rm ./obj/*.o ./obj/engine.exe
+clean:
+	-rm ./obj/*.o ./obj/*.exe

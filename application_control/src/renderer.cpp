@@ -9,7 +9,7 @@
 
 #include <renderer.hpp>
 
-/** @fn Screen* create_renderer(void)
+/** @fn Screen* rend_CreateRenderer(void)
  * @brief This instantiates and returns a pointer to a heap
  * allocated class containging an SDL window and surface.
  * 
@@ -19,14 +19,14 @@
  * @return NULL
  * Returns NULL if the window fails to initialize.
  */
-Screen* create_renderer(void)
+Screen* rend_CreateRenderer(void)
 {
   Screen* screen = new Screen();
 
   if ((screen->Get_sdl_window() == NULL) || (screen->Get_sdl_renderer() == NULL))
   {
     ERR("Window or renderer could not be created! SDL_Error: ", SDL_GetError());
-    kill_renderer(screen);
+    rend_KillRenderer(screen);
     return NULL;
   }
 
@@ -35,9 +35,9 @@ Screen* create_renderer(void)
     INFO("SDL Window successfully created.");
     return screen;
   }
-} /* create_renderer */
+} /* rend_CreateRenderer */
 
-/** @fn void kill_renderer(Screen* renderer)
+/** @fn void rend_KillRenderer(Screen* renderer)
  * @brief This destroys the window handling class.
  * 
  * @param renderer
@@ -45,7 +45,8 @@ Screen* create_renderer(void)
  * 
  * @return void
  */
-void kill_renderer(Screen* screen)
+void rend_KillRenderer(Screen* screen)
 {
+  INFO("Quit Event Received.");
   delete screen;
-} /* kill_renderer */
+} /* rend_KillRenderer */

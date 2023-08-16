@@ -15,8 +15,8 @@
   #include <debug.hpp>
 
   // Macro Definitions
-  #define DEFAULT_WINDOWED_SCREEN_WIDTH    640
-  #define DEFAULT_WINDOWED_SCREEN_HEIGHT   480
+  #define DEFAULT_WINDOWED_SCREEN_WIDTH    512
+  #define DEFAULT_WINDOWED_SCREEN_HEIGHT   256
 
   // Types, Objects and Classes
   class Screen
@@ -54,7 +54,7 @@
           if (r_info.name == std::string("direct3d11"))
           {
             INFO("direct3d11 found");
-            r = SDL_CreateRenderer(w, i , SDL_RENDERER_ACCELERATED);
+            r = SDL_CreateRenderer(w, i , 0);
             break;
           }
 
@@ -166,7 +166,7 @@
   }; /* Screen */
 
   // Function declarations.
-  Screen* create_renderer(void);
-  void kill_renderer(Screen* renderer);
+  Screen* rend_CreateRenderer(void);
+  void rend_KillRenderer(Screen* renderer);
 
 #endif /* TULIP_RENDERER_H_ */

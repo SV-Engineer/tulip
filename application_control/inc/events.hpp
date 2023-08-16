@@ -13,7 +13,7 @@
   #include <SDL.h>
 
   // Function declarations
-  SDL_Event* CreateEvent(void);
-  void PollEvent(SDL_Event* e);
+  SDL_Event* evt_CreateEvent(void);
+  bool evt_PollEvent(SDL_Event* e);
 
 #endif /* TULIP_EVENTS_H_ */

@@ -21,8 +21,8 @@ int (*func_ptr)(void) = &unit_test;
 int unit_test(void)
 {
   // Perform pointer initializations.
-  Screen* engine_window = create_renderer();
-  SDL_Event* e = CreateEvent();
+  Screen* engine_window = rend_CreateRenderer();
+  SDL_Event* e = evt_CreateEvent();
 
   if ((engine_window == NULL) || (e == NULL))
   {
@@ -32,8 +32,8 @@ int unit_test(void)
   else
   {
     // Wait on quit event and then exit program.
-    PollEvent(e);
-    kill_renderer(engine_window);
+    while (!evt_PollEvent(e));
+    rend_KillRenderer(engine_window);
     return SUCCESS;
   }
 } /* unit_test */
