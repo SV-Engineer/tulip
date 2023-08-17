@@ -9,11 +9,8 @@
  *        > mingw32-make makefile all UT=draw_square
  */
 
-#define DEBUG
 #include <debug.hpp>
-#include <SDL_thread.h>
-#include <events.hpp>
-#include <renderer.hpp>
+#include <TULIP_ApplicationControl.hpp>
 
 // Forward declare the unit test function.
 int unit_test(void);
@@ -22,18 +19,13 @@ int (*func_ptr)(void) = &unit_test;
 
 // Forward declare the threads.
 int thread_RenderScreen(void*);
-int thread_EvtHandler(void*);
-
-typedef struct thread_vars
-{
-  SDL_sem*  sem;
-  bool      kill;
-} thread_vars_t;
+//int thread_EvtHandler(void*);
 
 // Main Unit test function.
 int unit_test(void)
 {
   // Using the semaphore as a mutex (for now).
+  Screen*                 engine_window    = rend_CreateRenderer();
   SDL_Event*              e                = evt_CreateEvent();
   volatile SDL_sem*       thread_semaphore = SDL_CreateSemaphore(0x1U);
   volatile thread_vars_t  thread_deciders  = {};
@@ -52,6 +44,10 @@ int unit_test(void)
     thread_deciders.sem            = (SDL_sem*) thread_semaphore;
     INFO("Update Kill");
     thread_deciders.kill           = false;
+    thread_deciders.engine_window  = engine_window;
+    thread_deciders.update_screen  = SDL_CreateCond();
+    thread_deciders.update_screen_mutex = SDL_CreateMutex();
+    thread_deciders.timerIDs->push_back(timer_InitRenderTimer((void*) &thread_deciders));
 
     // Start the event handler thread.
     INFO("Starting threads");
@@ -85,6 +81,12 @@ int unit_test(void)
     INFO("Kill detected.");
 
     SDL_DestroySemaphore(thread_deciders.sem);
+
+    for (auto i = thread_deciders.timerIDs->begin(); i != thread_deciders.timerIDs->end(); i++)
+    {
+      timer_KillTimer(*i);
+    }
+
     return SUCCESS;
   }
 } /* unit_test */
@@ -112,8 +114,8 @@ int unit_test(void)
 int thread_RenderScreen(void* thread_variables)
 {
   // Perform pointer initialization.
-  Screen*        engine_window = rend_CreateRenderer();
   thread_vars_t* ctrl          = (thread_vars_t*) thread_variables;
+  Screen*        engine_window = ctrl->engine_window;
   // Test variables
   int h = 1;
   int v = 1;
@@ -132,6 +134,10 @@ int thread_RenderScreen(void* thread_variables)
     // Enter rendering thread loop.
     while (!exit)
     {
+
+      SDL_mutexP(ctrl->update_screen_mutex);
+      (void) SDL_CondWait(ctrl->update_screen, ctrl->update_screen_mutex);
+
       // Initialize the back buffer.
       SDL_RenderClear(engine_window->Get_sdl_renderer());
 

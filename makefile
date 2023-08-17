@@ -33,14 +33,19 @@ LINK_LIBS									= -l mingw32 \
 UNIT_TEST = $(UT)
 
 DEPS_LIST = renderer \
-						events
+						events \
+						timers
 
 OBJ_FILES = ./obj/renderer.o \
 						./obj/events.o \
+						./obj/timers.o \
 						./obj/run_engine.o
 
 # Compile and output
 all: run_engine engine
+
+timers:
+	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 renderer:
 	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
@@ -54,7 +59,7 @@ run_engine: $(DEPS_LIST)
 all_unit_test: unit_test engine
 
 unit_test: $(DEPS_LIST)
-	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
+	$(CC) $(CC_ARGS) -D DEBUG $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 
 engine:
 	$(CC) $(MAIN_CC_ARGS) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe
