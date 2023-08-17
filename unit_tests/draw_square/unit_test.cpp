@@ -34,9 +34,9 @@ typedef struct thread_vars
 int unit_test(void)
 {
   // Using the semaphore as a mutex (for now).
+  SDL_Event*              e                = evt_CreateEvent();
   volatile SDL_sem*       thread_semaphore = SDL_CreateSemaphore(0x1U);
   volatile thread_vars_t  thread_deciders  = {};
-  volatile bool           exit_req         = false;
 
   if (thread_semaphore == NULL)
   {
@@ -55,19 +55,32 @@ int unit_test(void)
 
     // Start the event handler thread.
     INFO("Starting threads");
-    SDL_Thread* thread_process_event  = SDL_CreateThread(thread_EvtHandler, "eventThread", (void*) &thread_deciders);
+    // SDL_Thread* thread_process_event  = SDL_CreateThread(thread_EvtHandler, "eventThread", (void*) &thread_deciders);
     SDL_Thread* thread_process_render = SDL_CreateThread(thread_RenderScreen, "rendering", (void*) &thread_deciders);
 
-    SDL_DetachThread(thread_process_render);
-    
     INFO("Waiting on kill in main thread.");
-    // do
-    // {
-    //   SDL_SemWait(thread_deciders.sem);
-    //   exit_req = thread_deciders.kill;
-    //   SDL_SemPost(thread_deciders.sem);
-    // } while (!(exit_req));
-    SDL_WaitThread(thread_process_event, NULL);
+
+    INFO("Entry to event polling thread.");
+    do
+    {
+      if(SDL_SemTryWait(thread_deciders.sem) == SUCCESS)
+      {
+        thread_deciders.kill = evt_PollEvent(e);
+        SDL_SemPost(thread_deciders.sem);
+      }
+
+      else
+      {
+        continue;
+      }
+    } while (!(thread_deciders.kill));
+
+    SDL_WaitThread(thread_process_render, NULL);
+    INFO("Quit Event Detected");
+
+
+    //(void) thread_EvtHandler((void*) &thread_deciders);
+
 
     INFO("Kill detected.");
 
@@ -77,23 +90,24 @@ int unit_test(void)
 } /* unit_test */
 
 
-int thread_EvtHandler(void* thread_variables)
-{
-  thread_vars_t* ctrl = (thread_vars_t*) thread_variables;
-  SDL_Event*     e    = evt_CreateEvent();
+// int thread_EvtHandler(void* thread_variables)
+// {
+//   thread_vars_t* ctrl = (thread_vars_t*) thread_variables;
+//   SDL_Event*     e    = evt_CreateEvent();
 
-  INFO("Entry to event polling thread.");
-  do
-  {
-    SDL_SemWait(ctrl->sem);
-    ctrl->kill = evt_PollEvent(e);
-    SDL_SemPost(ctrl->sem);
-  } while (!(ctrl->kill));
+//   INFO("Entry to event polling thread.");
+//   do
+//   {
+//     SDL_SemWait(ctrl->sem);
+//     *(ctrl->kill) = evt_PollEvent(e);
+//     SDL_SemPost(ctrl->sem);
+//     SDL_Delay(0);
+//   } while (!(*(ctrl->kill)));
 
-  INFO("Quit Event Detected");
+//   INFO("Quit Event Detected");
 
-  return SUCCESS;
-} /* thread_EvtHandler */
+//   return SUCCESS;
+// } /* thread_EvtHandler */
 
 int thread_RenderScreen(void* thread_variables)
 {
@@ -104,7 +118,7 @@ int thread_RenderScreen(void* thread_variables)
   int h = 1;
   int v = 1;
   uint8_t red_sat = (uint8_t) 0xFF;
-  bool exit = false;
+  volatile bool exit = false;
 
 
   if ((engine_window == NULL))
@@ -125,16 +139,21 @@ int thread_RenderScreen(void* thread_variables)
       (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), red_sat--, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0xFF);
 
       // Draw a line of points across the screen.
-      SDL_RenderDrawPoint(engine_window->Get_sdl_renderer(), h, v);
+      SDL_RenderDrawPoint(engine_window->Get_sdl_renderer(), (h++ & (DEFAULT_WINDOWED_SCREEN_WIDTH - 1)), (v++ & (DEFAULT_WINDOWED_SCREEN_HEIGHT - 1)));
 
       // Update to present.
       SDL_RenderPresent(engine_window->Get_sdl_renderer());
 
-      SDL_Delay(16U);
+      if(SDL_SemTryWait(ctrl->sem) == SUCCESS)
+      {
+        exit = ctrl->kill;
+        SDL_SemPost(ctrl->sem);
+      }
 
-      SDL_SemWait(ctrl->sem);
-      exit = ctrl->kill;
-      SDL_SemPost(ctrl->sem);
+      else
+      {
+        continue;
+      }
     }
 
     INFO("Kill Renderer");
