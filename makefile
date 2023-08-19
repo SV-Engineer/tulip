@@ -1,49 +1,99 @@
-# First setup the miscellaneous variables required for easy maintenance.
+############################################################################################
+# Directory Variables
+############################################################################################
 CORE_DIR									= ./core
 COMMON_DIR								= $(CORE_DIR)/common
-UNIT_TESTS_SRC_DIR				= ./unit_tests
+APP_CTRL_DIR							= ./application_control
 OUTPUT_DIR								= ./obj
-APP_CTRL_SRC							= ./application_control/src
+UNIT_TESTS_SRC_DIR				= ./unit_tests
+DEBUG_DIR									= ./debug
+SDL2_DIR									= $(CORE_DIR)/SDL2_Latest/i686-w64-mingw32
 
-# Compiler used
+############################################################################################
+# Source Paths
+############################################################################################
+APP_CTRL_SRC							= $(APP_CTRL_DIR)/src
+COMMON_SRC								= $(COMMON_DIR)/src
+
+############################################################################################
+# Include Paths
+############################################################################################
+SDL2_INC									= $(SDL2_DIR)/include
+APP_CTRL_INC							= $(APP_CTRL_DIR)/inc
+COMMON_INC								= $(COMMON_DIR)/inc
+DEBUG_INC									= $(DEBUG_DIR)/inc
+
+############################################################################################
+# Compiler Used
+############################################################################################
 CC												= g++
 
-# Compiler arguments
+############################################################################################
+# Compiler Arguments
+############################################################################################
 MAIN_CC_ARGS							= -std=c++17
 CC_ARGS										= $(MAIN_CC_ARGS) -c
 
+############################################################################################
+# Include Directory Compiler Arguments
+############################################################################################
+INC_DIRS									= -I $(SDL2_INC)/SDL2 \
+														-I $(APP_CTRL_INC) \
+														-I $(COMMON_INC) \
+														-I $(DEBUG_INC)
 
-# include directories
-INC_DIRS									= -I ./core/SDL2_Latest/i686-w64-mingw32/include/SDL2 \
-														-I ./application_control/inc/ \
-														-I ./debug/inc/
+############################################################################################
+# Link Directory Compiler Arguments
+############################################################################################
+LINK_DIRS									= -L $(SDL2_DIR)/bin/ \
+														-L $(OUTPUT_DIR)
 
-# directory of libraries to link to
-LINK_DIRS									= -L ./core/SDL2_Latest/i686-w64-mingw32/bin/ \
-														-L ./obj/
-
-# directory of libraries to link to
+############################################################################################
+# Link Library Compiler Arguments
+############################################################################################
 LINK_LIBS									= -l mingw32 \
 														-l SDL2main \
 														-l SDL2
 
-# Set argument variables (This make file expects argument
-# UT to provide a valid directory name from the unit_tests
-# directory).
+############################################################################################
+# Set argument variables (This makefile expects argument UT to provide a valid directory
+# name from the unit_tests directory).
+############################################################################################
 UNIT_TEST = $(UT)
 
+############################################################################################
+# Dependencies list for compilation.
+############################################################################################
 DEPS_LIST = renderer \
 						events \
-						timers
+						timers \
+						thread_ctrl
 
-OBJ_FILES = ./obj/renderer.o \
-						./obj/events.o \
-						./obj/timers.o \
-						./obj/run_engine.o
+############################################################################################
+# Expected object files from compilation to provide to linker.
+############################################################################################
+OBJ_FILES = $(OUTPUT_DIR)/renderer.o \
+						$(OUTPUT_DIR)/events.o \
+						$(OUTPUT_DIR)/timers.o \
+						$(OUTPUT_DIR)/thread_ctrl.o \
+						$(OUTPUT_DIR)/run_engine.o
 
-# Compile and output
+############################################################################################
+# Compile the engine primary
+############################################################################################
 all: run_engine engine
 
+############################################################################################
+# Compile the engine unit test
+#   * mingw32-make all_unit_test UT=compilation
+#   * mingw32-make all_unit_test UT=render
+#   * mingw32-make all_unit_test UT=draw_square
+############################################################################################
+all_unit_test: unit_test engine
+
+############################################################################################
+# Dependency Recipes
+############################################################################################
 timers:
 	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
@@ -53,11 +103,14 @@ renderer:
 events:
 	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
+thread_ctrl:
+	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+
+# This and the unit_test dependency are mutually exclusive in compilation.
 run_engine: $(DEPS_LIST)
-	$(CC) $(CC_ARGS) $(CORE_DIR)/common/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(COMMON_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
-all_unit_test: unit_test engine
-
+# Note that the object file this generates is the same as the run_engine dependency.
 unit_test: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) -D DEBUG $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 

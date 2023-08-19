@@ -6,8 +6,7 @@
  * 
  */
 
-#include <renderer.hpp>
-#include <events.hpp>
+#include <run_engine.hpp>
 
 // Forward declare the unit test function.
 int run_engine(void);
@@ -16,5 +15,5 @@ int (*func_ptr)(void) = &run_engine;
 
 int run_engine(void)
 {
-  return 0;
+  return SUCCESS;
 }

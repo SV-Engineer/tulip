@@ -53,7 +53,7 @@ int unit_test(void)
   {
     // Start the rendering thread and detach it.
     INFO("Starting thread(s)");
-    thread_process_render = SDL_CreateThread(thread_RenderScreen, "rendering", (void*) &thread_deciders);
+    thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_RENDER), "rendering", (void*) &thread_deciders);
     SDL_DetachThread(thread_process_render);
 
     INFO("Entry to event polling thread. Polling exit event.");
@@ -79,71 +79,3 @@ int unit_test(void)
     return SUCCESS;
   }
 } /* unit_test */
-
-int thread_RenderScreen(void* thread_variables)
-{
-  // Perform pointer initialization.
-  thread_vars_t* ctrl          = (thread_vars_t*) thread_variables;
-  Screen*        engine_window = ctrl->engine_window;
-  // Test variables
-  volatile bool exit = false;
-  int h = 1;
-  int v = 1;
-  SDL_Rect tmp_rect =
-  {
-    .x = (DEFAULT_WINDOWED_SCREEN_WIDTH >> 1),
-    .y = (DEFAULT_WINDOWED_SCREEN_HEIGHT >> 2),
-    .w = 64,
-    .h = 64
-  };
-
-  if ((engine_window == NULL))
-  {
-    ERR("Screen returned null pointer", SDL_GetError());
-  }
-
-  else
-  {
-    INFO("Enter Rendering loop.");
-    // Enter rendering thread loop.
-    while (!exit)
-    {
-
-      //SDL_mutexP(ctrl->update_screen_mutex);
-      (void) SDL_CondWait(ctrl->update_screen, ctrl->update_screen_mutex);
-
-      // Initialize the back buffer.
-      SDL_RenderClear(engine_window->Get_sdl_renderer());
-
-
-      // Set rectangle color
-      (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), (uint8_t) 0x00, (uint8_t) 0xFF, (uint8_t) 0x00, (uint8_t) 0xFF);
-      (void) SDL_RenderFillRect(engine_window->Get_sdl_renderer(), (const SDL_Rect*) &tmp_rect);
-
-      // Set the renderer's drawing color.
-      (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), 0x00, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0xFF);
-
-      // Draw a "square"
-      SDL_RenderDrawRect(engine_window->Get_sdl_renderer(), &tmp_rect);
-
-      // Update to present.
-      SDL_RenderPresent(engine_window->Get_sdl_renderer());
-
-      if(SDL_SemTryWait(ctrl->sem) == SUCCESS)
-      {
-        exit = ctrl->kill;
-        SDL_SemPost(ctrl->sem);
-      }
-
-      else
-      {
-        continue;
-      }
-    }
-
-    rend_KillRenderer(engine_window);
-    timer_KillTimer(ctrl->renderTimerID);
-  }
-
-  return SUCCESS;
-} /* thread_RenderScreen */
