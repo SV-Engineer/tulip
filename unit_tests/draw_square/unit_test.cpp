@@ -41,18 +41,20 @@ int unit_test(void)
     // Assign pointers and default values to structure.
     INFO("Assigning Pointers to structure");
     INFO("Update Sem");
-    thread_deciders.sem            = (SDL_sem*) thread_semaphore;
+    thread_deciders.sem                 = (SDL_sem*) thread_semaphore;
     INFO("Update Kill");
-    thread_deciders.kill           = false;
-    thread_deciders.engine_window  = engine_window;
-    thread_deciders.update_screen  = SDL_CreateCond();
+    thread_deciders.kill                = false;
+    thread_deciders.engine_window       = engine_window;
+    thread_deciders.update_screen       = SDL_CreateCond();
     thread_deciders.update_screen_mutex = SDL_CreateMutex();
-    thread_deciders.timerIDs->push_back(timer_InitRenderTimer((void*) &thread_deciders));
+    thread_deciders.renderTimerID       = timer_InitRenderTimer((void*) &thread_deciders);
 
     // Start the event handler thread.
     INFO("Starting threads");
     // SDL_Thread* thread_process_event  = SDL_CreateThread(thread_EvtHandler, "eventThread", (void*) &thread_deciders);
     SDL_Thread* thread_process_render = SDL_CreateThread(thread_RenderScreen, "rendering", (void*) &thread_deciders);
+
+    SDL_DetachThread(thread_process_render);
 
     INFO("Waiting on kill in main thread.");
 
@@ -71,7 +73,7 @@ int unit_test(void)
       }
     } while (!(thread_deciders.kill));
 
-    SDL_WaitThread(thread_process_render, NULL);
+    //SDL_WaitThread(thread_process_render, NULL);
     INFO("Quit Event Detected");
 
 
@@ -82,34 +84,9 @@ int unit_test(void)
 
     SDL_DestroySemaphore(thread_deciders.sem);
 
-    for (auto i = thread_deciders.timerIDs->begin(); i != thread_deciders.timerIDs->end(); i++)
-    {
-      timer_KillTimer(*i);
-    }
-
     return SUCCESS;
   }
 } /* unit_test */
-
-
-// int thread_EvtHandler(void* thread_variables)
-// {
-//   thread_vars_t* ctrl = (thread_vars_t*) thread_variables;
-//   SDL_Event*     e    = evt_CreateEvent();
-
-//   INFO("Entry to event polling thread.");
-//   do
-//   {
-//     SDL_SemWait(ctrl->sem);
-//     *(ctrl->kill) = evt_PollEvent(e);
-//     SDL_SemPost(ctrl->sem);
-//     SDL_Delay(0);
-//   } while (!(*(ctrl->kill)));
-
-//   INFO("Quit Event Detected");
-
-//   return SUCCESS;
-// } /* thread_EvtHandler */
 
 int thread_RenderScreen(void* thread_variables)
 {
@@ -135,7 +112,7 @@ int thread_RenderScreen(void* thread_variables)
     while (!exit)
     {
 
-      SDL_mutexP(ctrl->update_screen_mutex);
+      //SDL_mutexP(ctrl->update_screen_mutex);
       (void) SDL_CondWait(ctrl->update_screen, ctrl->update_screen_mutex);
 
       // Initialize the back buffer.

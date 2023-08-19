@@ -21,7 +21,7 @@
     SDL_mutex*   update_screen_mutex;
     SDL_sem*     sem;
     bool         kill;
-    std::vector<SDL_TimerID>* timerIDs;
+    SDL_TimerID  renderTimerID;
   } thread_vars_t;
 
 #endif /* TULIP_THREAD_CTRL_H_ */
