@@ -82,7 +82,7 @@
       // Class constructor
       Screen(void)
       {
-        if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
+        if(SDL_Init( SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO) < 0)
         {
           ERR("SDL could not initialize! SDL_Error: ", SDL_GetError());
           window   = nullptr;

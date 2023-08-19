@@ -39,3 +39,21 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
   * TIL that initializing a struct with empty curly braces is a succinct way of guaranteeing all members are initialized to default values. I.e an 'int' type would be initialized to a value of `0` while a 'float' or 'double' will be initialized to a value of `0.0`.
 
   * Today I realized that I am still writing this with an embedded mindset. On a uController, when writing an interrupt driven system, sleeping is the way to save power. I believe my efforts to write threads have been hampered by this mindset. I think that instead of putting waits into the rendering thread, I need a "Tick" timer to send a signal to start and update every so often.
+
+  * The timer call back function needs to return the "interval" input to restart the timer. So the requirements and steps to put rendering into its own thread and decouple it from the rest of the logic is as follows:
+    - Requirements
+      * A boolean pointer and associated semaphore for interprocess communication of when to quit. (It may be that the Semaphore could be a mutex, but I have thoughts on why it should be a semaphore that I can't quite articulate right now).
+      * A condition variable and an associated mutex so that the rendering thread can be "put to sleep" until the rendering timer signals it to start back up.
+
+    - Steps:
+      1. Create the aforementioned objects.
+
+      2. Create a thread for rendering that is dependent upon the condition variable being signaled.
+
+      3. Detach created thread because rendering should (probably) be independent of the engine logic. Also we don't want hang ups in the event polling if it can be helped.
+
+      4. Create the timer that causes rendering to happen.
+
+      5. Poll for the quit event and update the boolean pointer appropriately. The render thread should have a while loop based upon said boolean.
+
+      6. Keep rendering until exit. Upon exit deallocate any memory used.

@@ -22,8 +22,6 @@ uint32_t hlp_SignalThread(uint32_t interval, void* param);
  */
 SDL_TimerID timer_InitRenderTimer(void* ctrl)
 {
-  thread_vars_t* ctrl_local = (thread_vars_t *) ctrl;
-  SDL_mutexP(ctrl_local->update_screen_mutex);
   SDL_TimerID render_timer = SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalThread, ctrl);
   return render_timer;
 } /* timer_InitRenderTimer */
@@ -49,6 +47,7 @@ void timer_KillTimer(SDL_TimerID id)
 uint32_t hlp_SignalThread(uint32_t interval, void* param)
 {
   thread_vars_t* ctrl = (thread_vars_t*) param;
+  SDL_mutexP(ctrl->update_screen_mutex);
   int status = SDL_CondSignal(ctrl->update_screen);
   SDL_mutexV(ctrl->update_screen_mutex);
   return interval;
