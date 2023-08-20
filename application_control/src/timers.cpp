@@ -9,46 +9,93 @@
 #include <timers.hpp>
 
 // Forward declare helper functions
-uint32_t hlp_SignalThread(uint32_t interval, void* param);
+uint32_t hlp_SignalRenderThread(uint32_t interval, void* param);
+uint32_t hlp_SignalInputThread(uint32_t interval, void* param);
+static void hlp_InitRenderTimer(void* ctrl);
+static void hlp_InitInputTimer(void* ctrl);
 
-/** @fn SDL_TimerID timer_InitRenderTimer(void* ctrl)
+/** @fn void timer_InitTimers(void* ctrl)
+ * @brief This function initializes all timers relevant to running the engine.
+ * 
+ */
+void timer_InitTimers(void* ctrl)
+{
+
+  // Create the needed mutexes.
+  ((thread_vars_t*) ctrl)->mutexes[THREAD_RENDER]       = (SDL_CreateMutex());
+  ((thread_vars_t*) ctrl)->mutexes[THREAD_INPUT]        = (SDL_CreateMutex());
+  // Create the needed signals.
+  ((thread_vars_t*) ctrl)->signal_update[THREAD_RENDER] = SDL_CreateCond();
+  ((thread_vars_t*) ctrl)->signal_update[THREAD_INPUT]  = SDL_CreateCond();
+  // Initialize the timers.
+  hlp_InitRenderTimer(ctrl);
+  hlp_InitInputTimer(ctrl);
+} /* timer_InitTimers */
+
+/** @fn void timer_KillTimers(std::vect<SDL_TimerID> ids)
+ * @brief This function iterates through and kills timers held in a vector.
+ * 
+ * @param std::vector<SDL_TimerID>
+ * IDs of the Timers to destroy.
+ */
+void timer_KillTimers(std::vector<SDL_TimerID> ids)
+{
+  for (auto id = ids.begin(); id < ids.end(); id++)
+  {
+    SDL_RemoveTimer(*id);
+  }
+} /* timer_KillTimers */
+
+/** @fn static void hlp_InitRenderTimer(void* ctrl)
  * @brief This function instantiates a timer used to signal the rendering thread to run.
  * 
- * @return SDL_TimerID
- * A pointer to a timer.
  * 
  * @return 0
  * Returns 0 if the timer fails to initialize.
  */
-SDL_TimerID timer_InitRenderTimer(void* ctrl)
+static void hlp_InitRenderTimer(void* ctrl)
 {
-  SDL_TimerID render_timer = SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalThread, ctrl);
-  return render_timer;
-} /* timer_InitRenderTimer */
+  ((thread_vars_t*) ctrl)->timerIDs.push_back(SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalRenderThread, ctrl));
+} /* hlp_InitRenderTimer */
 
-/** @fn void timer_KillTimer(SDL_TimerID id)
- * @brief This function instantiates a timer used to signal the rendering thread to run.
+/** @fn static void hlp_InitInputTimer(void* ctrl)
+ * @brief This function instantiates a timer used to signal the input thread to run.
  * 
- * @param SDL_TimerID
- * ID of the Timer to destroy.
+ * @return 0
+ * Returns 0 if the timer fails to initialize.
  */
-void timer_KillTimer(SDL_TimerID id)
+static void hlp_InitInputTimer(void* ctrl)
 {
-  SDL_RemoveTimer(id);
-}
+  // On average 30 ping is pretty good so 10 ms delay should be unnoticable.
+  ((thread_vars_t*) ctrl)->timerIDs.push_back(SDL_AddTimer(10, hlp_SignalInputThread, ctrl));
+} /* hlp_InitInputTimer */
 
-
-/** @fn uint32_t hlp_SignalThread(uint32_t interval, void* param)
+/** @fn uint32_t hlp_SignalRenderThread(uint32_t interval, void* param)
  * @brief This function is the call back function for the timers.
  * 
  * @param void*
  * A void pointer to a @ref thread_ctrl_t type
  */
-uint32_t hlp_SignalThread(uint32_t interval, void* param)
+uint32_t hlp_SignalRenderThread(uint32_t interval, void* param)
 {
   thread_vars_t* ctrl = (thread_vars_t*) param;
-  SDL_mutexP(ctrl->update_screen_mutex);
-  int status = SDL_CondSignal(ctrl->update_screen);
-  SDL_mutexV(ctrl->update_screen_mutex);
+  SDL_mutexP(ctrl->mutexes[THREAD_RENDER]);
+  int status = SDL_CondSignal(ctrl->signal_update[THREAD_RENDER]);
+  SDL_mutexV(ctrl->mutexes[THREAD_RENDER]);
   return interval;
-} /* hlp_SignalThread */
+} /* hlp_SignalRenderThread */
+
+/** @fn uint32_t hlp_SignalInputThread(uint32_t interval, void* param)
+ * @brief This function is the call back function for the timers.
+ * 
+ * @param void*
+ * A void pointer to a @ref thread_ctrl_t type
+ */
+uint32_t hlp_SignalInputThread(uint32_t interval, void* param)
+{
+  thread_vars_t* ctrl = (thread_vars_t*) param;
+  SDL_mutexP(ctrl->mutexes[THREAD_INPUT]);
+  int status = SDL_CondSignal(ctrl->signal_update[THREAD_INPUT]);
+  SDL_mutexV(ctrl->mutexes[THREAD_INPUT]);
+  return interval;
+} /* hlp_SignalInputThread */

@@ -12,10 +12,11 @@
   // Dependencies.
   #include <SDL.h>
   #include <thread_ctrl.hpp>
+  #include <vector>
   #include <debug.hpp>
 
   // Function declarations
-  SDL_TimerID timer_InitRenderTimer(void* ctrl);
-  void timer_KillTimer(SDL_TimerID id);
+  void timer_InitTimers(void* ctrl);
+  void timer_KillTimers(std::vector<SDL_TimerID> ids);
 
 #endif /* TULIP_TIMERS_H_ */

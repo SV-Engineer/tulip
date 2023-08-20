@@ -11,9 +11,11 @@
   // Dependencies
   #include <stdbool.h>
   #include <SDL.h>
+  #include <mouse_input.hpp>
+  #include <thread_ctrl.hpp>
 
   // Function declarations
   SDL_Event* evt_CreateEvent(void);
-  bool evt_PollEvent(SDL_Event* e);
+  void evt_PollEvent(SDL_Event* e, thread_vars_t* ctrl);
 
 #endif /* TULIP_EVENTS_H_ */

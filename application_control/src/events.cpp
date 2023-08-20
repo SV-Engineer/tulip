@@ -25,7 +25,7 @@ SDL_Event* evt_CreateEvent(void)
   return event;
 } /* evt_CreateEvent */
 
-/** @fn bool evt_PollEvent(SDL_Event* e)
+/** @fn void evt_PollEvent(SDL_Event* e, thread_vars_t* ctrl)
  * @brief This polls an event and deletes it off the heap upon quit request.
  * 
  * @return true
@@ -34,7 +34,7 @@ SDL_Event* evt_CreateEvent(void)
  * @return false
  * do not terminate program
  */
-bool evt_PollEvent(SDL_Event* e)
+void evt_PollEvent(SDL_Event* e, thread_vars_t* ctrl)
 {
   bool quit = false;
 
@@ -43,16 +43,38 @@ bool evt_PollEvent(SDL_Event* e)
     switch (e->type)
     {
       case(SDL_QUIT):
-        quit = true;
+        ctrl->kill = true;
         hlp_KillEvent(e);
+        break;
+
+      case(SDL_MOUSEMOTION):
+        ctrl->mouse_loc = mouse_GetLocation();
+        INFO("Mouse Moved");
+        break;
+
+      case(SDL_MOUSEBUTTONDOWN):
+        ctrl->mouse_loc = mouse_GetLocation();
+        INFO("Mouse button down");
+        break;
+
+      case(SDL_MOUSEBUTTONUP):
+        ctrl->mouse_loc = mouse_GetLocation();
+        INFO("Mouse button up");
+        break;
+
+      case(SDL_KEYDOWN):
+        INFO("Key down");
+        ctrl->key_pressed = e->key.keysym.sym;
+        break;
+
+      case(SDL_KEYUP):
+        INFO("Key up");
         break;
 
       default:
         break;
     }
   }
-
-  return quit;
 } /* evt_PollEvent */
 
 // ===================================================================================

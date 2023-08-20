@@ -67,7 +67,8 @@ UNIT_TEST = $(UT)
 DEPS_LIST = renderer \
 						events \
 						timers \
-						thread_ctrl
+						thread_ctrl \
+						mouse_input
 
 ############################################################################################
 # Expected object files from compilation to provide to linker.
@@ -76,6 +77,7 @@ OBJ_FILES = $(OUTPUT_DIR)/renderer.o \
 						$(OUTPUT_DIR)/events.o \
 						$(OUTPUT_DIR)/timers.o \
 						$(OUTPUT_DIR)/thread_ctrl.o \
+						$(OUTPUT_DIR)/mouse_input.o \
 						$(OUTPUT_DIR)/run_engine.o
 
 ############################################################################################
@@ -101,6 +103,9 @@ renderer:
 	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 events:
+	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+
+mouse_input:
 	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 thread_ctrl:

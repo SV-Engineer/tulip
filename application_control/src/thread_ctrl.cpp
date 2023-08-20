@@ -10,6 +10,7 @@
 
 // Forward declare functions
 static int thread_RenderScreen(void* thread_variables);
+static int thread_UserInput(void* thread_variables);
 
 /** @fn SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
  * @brief This function is to be used to get the appropriate function pointer for the desired thread.
@@ -28,6 +29,10 @@ SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
       tmp_thread = thread_RenderScreen;
       break;
 
+    case E_KB_INPUT:
+      tmp_thread = thread_UserInput;
+      break;
+
     default:
       tmp_thread = nullptr;
       break;
@@ -35,6 +40,47 @@ SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
 
   return tmp_thread;
 } /* thread_GetThreadPtr */
+
+/** @fn static int thread_UserInput(void* thread_variables)
+ * @brief This function is to be used as a thread.
+ * 
+ * @par Use thread_GetThreadPtr to retrieve this thread.
+ * See Also:
+ *    * @ref E_KB_INPUT
+ *    * @ref threads_t
+ * 
+ * @return @ref SUCCESS
+ * 
+ */
+static int thread_UserInput(void* thread_variables)
+{
+  thread_vars_t* ctrl = (thread_vars_t*) thread_variables;
+  volatile bool  exit = false;
+
+  while (!exit)
+  {
+    (void) SDL_CondWait(ctrl->signal_update[THREAD_INPUT], ctrl->mutexes[THREAD_INPUT]);
+
+    if(ctrl->key_pressed == SDLK_w)
+    {
+      INFO("W press detected");
+    }
+
+    if(SDL_SemTryWait(ctrl->sem) == SUCCESS)
+    {
+      exit = ctrl->kill;
+      SDL_SemPost(ctrl->sem);
+    }
+
+    else
+    {
+      continue;
+    }
+  }
+
+  return SUCCESS;
+} /* thread_UserInput */
+
 
 /** @fn static int thread_RenderScreen(void* thread_variables)
  * @brief This function is to be used as a thread.
@@ -52,7 +98,7 @@ static int thread_RenderScreen(void* thread_variables)
   // Perform pointer initialization.
   thread_vars_t* ctrl          = (thread_vars_t*) thread_variables;
   Screen*        engine_window = ctrl->engine_window;
-  volatile bool exit = false;
+  volatile bool  exit = false;
 
 
   INFO("Enter Rendering loop.");
@@ -61,7 +107,7 @@ static int thread_RenderScreen(void* thread_variables)
   {
 
     //SDL_mutexP(ctrl->update_screen_mutex);
-    (void) SDL_CondWait(ctrl->update_screen, ctrl->update_screen_mutex);
+    (void) SDL_CondWait(ctrl->signal_update[THREAD_RENDER], ctrl->mutexes[THREAD_RENDER]);
 
     // Initialize the back buffer.
     SDL_RenderClear(engine_window->Get_sdl_renderer());
@@ -92,6 +138,5 @@ static int thread_RenderScreen(void* thread_variables)
   }
 
   rend_KillRenderer(engine_window);
-  timer_KillTimer(ctrl->renderTimerID);
   return SUCCESS;
 } /* thread_RenderScreen */

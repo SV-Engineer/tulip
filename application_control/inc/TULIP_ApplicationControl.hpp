@@ -12,6 +12,6 @@
   #include <renderer.hpp>
   #include <thread_ctrl.hpp>
   #include <timers.hpp>
-
+  #include <mouse_input.hpp>
 
 #endif /* TULIP_APP_CTRL_H_ */
