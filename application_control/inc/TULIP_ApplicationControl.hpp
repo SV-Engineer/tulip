@@ -8,6 +8,7 @@
   #define TULIP_APP_CTRL_H_
 
   // All Application Control Dependencies
+  #include <SDL.h>
   #include <events.hpp>
   #include <renderer.hpp>
   #include <thread_ctrl.hpp>

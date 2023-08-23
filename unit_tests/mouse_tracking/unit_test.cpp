@@ -17,15 +17,11 @@ int unit_test(void);
 
 int (*func_ptr)(void) = &unit_test;
 
-// Forward declare the threads.
-int thread_RenderScreen(void*);
-//int thread_EvtHandler(void*);
-
 // Main Unit test function.
 int unit_test(void)
 {
-  volatile thread_vars_t  ctrl       = {};
-  SDL_Event*              e                     = evt_CreateEvent();
+  volatile thread_vars_t  ctrl                  = {};
+
   SDL_Thread*             thread_process_render = nullptr;
   SDL_Thread*             thread_process_input  = nullptr;
 
@@ -34,6 +30,7 @@ int unit_test(void)
   ctrl.kill                          = false;
   ctrl.sem                           = SDL_CreateSemaphore(0x1U);
   ctrl.engine_window                 = rend_CreateRenderer();
+  ctrl.e                             = evt_CreateEvent();
 
   if ((ctrl.sem == NULL) || (ctrl.engine_window == NULL))
   {
@@ -55,10 +52,9 @@ int unit_test(void)
     do
     {
       SDL_SemWait(ctrl.sem);
-      evt_PollEvent(e, (thread_vars_t*) &ctrl);
+      evt_PollEvent((thread_vars_t*) &ctrl);
       SDL_SemPost(ctrl.sem);
     } while (!(ctrl.kill));
-
     INFO("Quit Event Detected");
 
     SDL_DestroySemaphore(ctrl.sem);

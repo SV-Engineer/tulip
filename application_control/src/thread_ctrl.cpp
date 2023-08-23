@@ -7,6 +7,7 @@
  */
 
 #include <thread_ctrl.hpp>
+#include <events.hpp>
 
 // Forward declare functions
 static int thread_RenderScreen(void* thread_variables);
@@ -124,6 +125,8 @@ static int thread_RenderScreen(void* thread_variables)
 
     // Update to present.
     SDL_RenderPresent(engine_window->Get_sdl_renderer());
+    // Update Surface
+    SDL_UpdateWindowSurface(engine_window->Get_sdl_window());
 
     if(SDL_SemTryWait(ctrl->sem) == SUCCESS)
     {

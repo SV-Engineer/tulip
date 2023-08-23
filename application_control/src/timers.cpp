@@ -22,8 +22,9 @@ void timer_InitTimers(void* ctrl)
 {
 
   // Create the needed mutexes.
-  ((thread_vars_t*) ctrl)->mutexes[THREAD_RENDER]       = (SDL_CreateMutex());
-  ((thread_vars_t*) ctrl)->mutexes[THREAD_INPUT]        = (SDL_CreateMutex());
+  ((thread_vars_t*) ctrl)->mutexes[THREAD_RENDER]       = SDL_CreateMutex();
+  ((thread_vars_t*) ctrl)->mutexes[THREAD_INPUT]        = SDL_CreateMutex();
+
   // Create the needed signals.
   ((thread_vars_t*) ctrl)->signal_update[THREAD_RENDER] = SDL_CreateCond();
   ((thread_vars_t*) ctrl)->signal_update[THREAD_INPUT]  = SDL_CreateCond();
@@ -49,9 +50,6 @@ void timer_KillTimers(std::vector<SDL_TimerID> ids)
 /** @fn static void hlp_InitRenderTimer(void* ctrl)
  * @brief This function instantiates a timer used to signal the rendering thread to run.
  * 
- * 
- * @return 0
- * Returns 0 if the timer fails to initialize.
  */
 static void hlp_InitRenderTimer(void* ctrl)
 {
@@ -61,12 +59,9 @@ static void hlp_InitRenderTimer(void* ctrl)
 /** @fn static void hlp_InitInputTimer(void* ctrl)
  * @brief This function instantiates a timer used to signal the input thread to run.
  * 
- * @return 0
- * Returns 0 if the timer fails to initialize.
  */
 static void hlp_InitInputTimer(void* ctrl)
 {
-  // On average 30 ping is pretty good so 10 ms delay should be unnoticable.
   ((thread_vars_t*) ctrl)->timerIDs.push_back(SDL_AddTimer(10, hlp_SignalInputThread, ctrl));
 } /* hlp_InitInputTimer */
 

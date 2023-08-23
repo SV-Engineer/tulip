@@ -43,6 +43,7 @@
     mouse_input_t                      mouse_loc;
     SDL_Keycode                        key_pressed;
     cam_coordinates_t                  coordinates;
+    SDL_Event*                         e;
   } thread_vars_t;
 
   /** @brief This enumerate tracks all of the available threads. */

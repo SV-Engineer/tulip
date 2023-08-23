@@ -88,6 +88,7 @@
           window   = nullptr;
           surface  = nullptr;
           renderer = nullptr;
+
         }
 
         else

@@ -34,17 +34,18 @@ SDL_Event* evt_CreateEvent(void)
  * @return false
  * do not terminate program
  */
-void evt_PollEvent(SDL_Event* e, thread_vars_t* ctrl)
+void evt_PollEvent(thread_vars_t* ctrl)
 {
   bool quit = false;
 
-  while(SDL_PollEvent(e))
+  while(SDL_PollEvent(ctrl->e))
   {
-    switch (e->type)
+    switch (ctrl->e->type)
     {
       case(SDL_QUIT):
+      INFO("Kill Event Detected");
         ctrl->kill = true;
-        hlp_KillEvent(e);
+        hlp_KillEvent(ctrl->e);
         break;
 
       case(SDL_MOUSEMOTION):
@@ -64,7 +65,7 @@ void evt_PollEvent(SDL_Event* e, thread_vars_t* ctrl)
 
       case(SDL_KEYDOWN):
         INFO("Key down");
-        ctrl->key_pressed = e->key.keysym.sym;
+        ctrl->key_pressed = ctrl->e->key.keysym.sym;
         break;
 
       case(SDL_KEYUP):
