@@ -36,14 +36,12 @@ SDL_Event* evt_CreateEvent(void)
  */
 void evt_PollEvent(thread_vars_t* ctrl)
 {
-  bool quit = false;
-
   while(SDL_PollEvent(ctrl->e))
   {
     switch (ctrl->e->type)
     {
       case(SDL_QUIT):
-      INFO("Kill Event Detected");
+        INFO("Kill Event Detected");
         ctrl->kill = true;
         hlp_KillEvent(ctrl->e);
         break;

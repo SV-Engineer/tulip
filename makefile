@@ -32,7 +32,7 @@ CC												= g++
 # Compiler Arguments
 ############################################################################################
 MAIN_CC_ARGS							= -std=c++17
-CC_ARGS										= $(MAIN_CC_ARGS) -c
+CC_ARGS										= $(MAIN_CC_ARGS) -c -D DEBUG
 
 ############################################################################################
 # Include Directory Compiler Arguments
@@ -117,7 +117,7 @@ run_engine: $(DEPS_LIST)
 
 # Note that the object file this generates is the same as the run_engine dependency.
 unit_test: $(DEPS_LIST)
-	$(CC) $(CC_ARGS) -D DEBUG $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
+	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 
 engine:
 	$(CC) $(MAIN_CC_ARGS) $(CORE_DIR)/main.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) $(OBJ_FILES) -o $(OUTPUT_DIR)/$@.exe

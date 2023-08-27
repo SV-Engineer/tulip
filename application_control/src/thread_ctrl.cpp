@@ -97,10 +97,13 @@ static int thread_UserInput(void* thread_variables)
 static int thread_RenderScreen(void* thread_variables)
 {
   // Perform pointer initialization.
-  thread_vars_t* ctrl          = (thread_vars_t*) thread_variables;
-  Screen*        engine_window = ctrl->engine_window;
-  volatile bool  exit = false;
+  thread_vars_t*       ctrl          = (thread_vars_t*) thread_variables;
+  static thread_vars_t prev_ctrl     = *ctrl;
+  Screen*              engine_window = ctrl->engine_window;
+  volatile bool        exit = false;
 
+  // Initialize the back buffer.
+  SDL_RenderClear(engine_window->Get_sdl_renderer());
 
   INFO("Enter Rendering loop.");
   // Enter rendering thread loop.
@@ -110,18 +113,25 @@ static int thread_RenderScreen(void* thread_variables)
     //SDL_mutexP(ctrl->update_screen_mutex);
     (void) SDL_CondWait(ctrl->signal_update[THREAD_RENDER], ctrl->mutexes[THREAD_RENDER]);
 
-    // Initialize the back buffer.
-    SDL_RenderClear(engine_window->Get_sdl_renderer());
 
-    // Set rectangle color
-    // (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), (uint8_t) 0x00, (uint8_t) 0xFF, (uint8_t) 0x00, (uint8_t) 0xFF);
-    // (void) SDL_RenderFillRect(engine_window->Get_sdl_renderer(), (const SDL_Rect*) &tmp_rect);
+    if
+    (
+        ((prev_ctrl.mouse_loc.x) != (ctrl->mouse_loc.x))
+     || ((prev_ctrl.mouse_loc.y) != (ctrl->mouse_loc.y))
+    )
+    {
+      INFO("Difference Detected.");
+      // Set point color
+      (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), (uint8_t) 0x00, (uint8_t) 0x80, (uint8_t) 0x00, (uint8_t) 0xFF);
+      (void) SDL_RenderDrawLine(engine_window->Get_sdl_renderer(), prev_ctrl.mouse_loc.x, prev_ctrl.mouse_loc.y, ctrl->mouse_loc.x, ctrl->mouse_loc.y);
+      prev_ctrl = *ctrl;
+    }
 
-    // Set the renderer's drawing color.
-    (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), 0x00, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0xFF);
-
-    // Draw a "square"
-    // SDL_RenderDrawRect(engine_window->Get_sdl_renderer(), &tmp_rect);
+    else
+    {
+      // Set point color
+      (void) SDL_SetRenderDrawColor(engine_window->Get_sdl_renderer(), (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0x00, (uint8_t) 0xFF);
+    }
 
     // Update to present.
     SDL_RenderPresent(engine_window->Get_sdl_renderer());
@@ -132,11 +142,6 @@ static int thread_RenderScreen(void* thread_variables)
     {
       exit = ctrl->kill;
       SDL_SemPost(ctrl->sem);
-    }
-
-    else
-    {
-      continue;
     }
   }
 

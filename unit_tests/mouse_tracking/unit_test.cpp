@@ -54,6 +54,7 @@ int unit_test(void)
       SDL_SemWait(ctrl.sem);
       evt_PollEvent((thread_vars_t*) &ctrl);
       SDL_SemPost(ctrl.sem);
+
     } while (!(ctrl.kill));
     INFO("Quit Event Detected");
 
