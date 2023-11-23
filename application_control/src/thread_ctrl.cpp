@@ -27,11 +27,11 @@ SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
   switch (t)
   {
     case E_RENDER:
-      tmp_thread = thread_RenderScreen;
+      tmp_thread = (SDL_ThreadFunction) thread_RenderScreen;
       break;
 
     case E_KB_INPUT:
-      tmp_thread = thread_UserInput;
+      tmp_thread = (SDL_ThreadFunction) thread_UserInput;
       break;
 
     default:

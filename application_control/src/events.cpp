@@ -34,8 +34,9 @@ SDL_Event* evt_CreateEvent(void)
  * @return false
  * do not terminate program
  */
-void evt_PollEvent(thread_vars_t* ctrl)
+void evt_PollEvent(void* param)
 {
+  thread_vars_t* ctrl = (thread_vars_t*) param;
   while(SDL_PollEvent(ctrl->e))
   {
     switch (ctrl->e->type)

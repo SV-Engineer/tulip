@@ -21,6 +21,8 @@
   // Macros and Defines
   #define THREAD_RENDER         ((const std::string) "render")
   #define THREAD_INPUT          ((const std::string) "input")
+  #define THREAD_IDLE           ((const std::string) "idle")
+
 
   /** @brief This struct is used to organize the location the camera relative to the background. */
   typedef struct cam_coordinates
