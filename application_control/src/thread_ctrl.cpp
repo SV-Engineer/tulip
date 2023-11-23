@@ -145,6 +145,7 @@ static int thread_RenderScreen(void* thread_variables)
     }
   }
 
+  INFO("Killing Renderer...");
   rend_KillRenderer(engine_window);
   return SUCCESS;
 } /* thread_RenderScreen */

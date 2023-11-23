@@ -6,7 +6,7 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile all UT=mouse_tracking
+ *        > mingw32-make makefile test UT=mouse_tracking
  */
 
 #include <debug.hpp>
@@ -58,10 +58,20 @@ int unit_test(void)
     } while (!(ctrl.kill));
     INFO("Quit Event Detected");
 
+    INFO("Wait semaphore...");
+    SDL_SemWait(ctrl.sem);
+    INFO("Wait semaphore destruction...");
     SDL_DestroySemaphore(ctrl.sem);
-    timer_KillTimers(((thread_vars_t *) &ctrl)->timerIDs);
+    INFO("Semaphore destruction success.");
+
+    INFO("Killing timers...");
+    timer_KillTimers((void*) &ctrl);
+    INFO("Killing timers successful.");
 
     INFO("Exiting main loop.");
+
+    //Quit SDL subsystems
+    SDL_Quit();
 
     return SUCCESS;
   }

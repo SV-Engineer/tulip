@@ -47,6 +47,6 @@ Screen* rend_CreateRenderer(void)
  */
 void rend_KillRenderer(Screen* screen)
 {
-  INFO("Quit Event Received.");
+  INFO("Quit Event Received. Destroying Renderer.");
   delete screen;
 } /* rend_KillRenderer */

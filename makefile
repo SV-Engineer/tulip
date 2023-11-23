@@ -87,11 +87,11 @@ all: run_engine engine
 
 ############################################################################################
 # Compile the engine unit test
-#   * mingw32-make all_unit_test UT=compilation
-#   * mingw32-make all_unit_test UT=render
-#   * mingw32-make all_unit_test UT=draw_square
+#   * mingw32-make test UT=compilation
+#   * mingw32-make test UT=render
+#   * mingw32-make test UT=draw_square
 ############################################################################################
-all_unit_test: unit_test engine
+test: unit_test engine
 
 ############################################################################################
 # Dependency Recipes

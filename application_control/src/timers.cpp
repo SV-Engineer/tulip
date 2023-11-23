@@ -39,12 +39,22 @@ void timer_InitTimers(void* ctrl)
  * @param std::vector<SDL_TimerID>
  * IDs of the Timers to destroy.
  */
-void timer_KillTimers(std::vector<SDL_TimerID> ids)
+void timer_KillTimers(void* param)
 {
-  for (auto id = ids.begin(); id < ids.end(); id++)
+  thread_vars_t* ctrl = (thread_vars_t*) param;
+  SDL_mutexP(ctrl->mutexes[THREAD_RENDER]);
+  SDL_mutexP(ctrl->mutexes[THREAD_INPUT]);
+  for (auto id = ctrl->timerIDs.begin(); id < ctrl->timerIDs.end(); id++)
   {
     SDL_RemoveTimer(*id);
   }
+
+  // TODO: Replace with for each loop.
+  SDL_DestroyMutex(ctrl->mutexes[THREAD_RENDER]);
+  SDL_DestroyMutex(ctrl->mutexes[THREAD_INPUT]);
+
+  SDL_DestroyCond(ctrl->signal_update[THREAD_RENDER]);
+  SDL_DestroyCond(ctrl->signal_update[THREAD_INPUT]);
 } /* timer_KillTimers */
 
 /** @fn static void hlp_InitRenderTimer(void* ctrl)

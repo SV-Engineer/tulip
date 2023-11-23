@@ -16,7 +16,7 @@
   #include <debug.hpp>
 
   // Function declarations
-  void timer_InitTimers(void* ctrl);
-  void timer_KillTimers(std::vector<SDL_TimerID> ids);
+  void timer_InitTimers(void*);
+  void timer_KillTimers(void*);
 
 #endif /* TULIP_TIMERS_H_ */
