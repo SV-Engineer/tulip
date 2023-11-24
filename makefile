@@ -4,6 +4,7 @@
 CORE_DIR									= ./core
 COMMON_DIR								= $(CORE_DIR)/common
 UI_DIR										= ./user_interface
+RENDER_DIR								= ./rendering
 OUTPUT_DIR								= ./obj
 UNIT_TESTS_SRC_DIR				= ./unit_tests
 DEBUG_DIR									= ./debug
@@ -13,6 +14,7 @@ SDL2_DIR									= $(CORE_DIR)/SDL2_Latest/i686-w64-mingw32
 # Source Paths
 ############################################################################################
 UI_SRC										= $(UI_DIR)/src
+RENDER_SRC								= $(RENDER_DIR)/src
 COMMON_SRC								= $(COMMON_DIR)/src
 
 ############################################################################################
@@ -20,6 +22,7 @@ COMMON_SRC								= $(COMMON_DIR)/src
 ############################################################################################
 SDL2_INC									= $(SDL2_DIR)/include
 UI_INC										= $(UI_DIR)/inc
+RENDER_INC								= $(RENDER_DIR)/inc
 COMMON_INC								= $(COMMON_DIR)/inc
 DEBUG_INC									= $(DEBUG_DIR)/inc
 
@@ -39,6 +42,7 @@ CC_ARGS										= $(MAIN_CC_ARGS) -c -D DEBUG
 ############################################################################################
 INC_DIRS									= -I $(SDL2_INC)/SDL2 \
 														-I $(UI_INC)        \
+														-I $(RENDER_INC)    \
 														-I $(COMMON_INC)    \
 														-I $(DEBUG_INC)
 
@@ -96,10 +100,11 @@ test: unit_test engine
 ############################################################################################
 # Dependency Recipes
 ############################################################################################
-timers:
-	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
-renderer:
+############################################################################################
+# User Interface Recipes
+############################################################################################
+timers:
 	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 events:
@@ -110,6 +115,12 @@ mouse_input:
 
 thread_ctrl:
 	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+
+############################################################################################
+# Rendering Recipes
+############################################################################################
+renderer:
+	$(CC) $(CC_ARGS) $(RENDER_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 # This and the unit_test dependency are mutually exclusive in compilation.
 run_engine: $(DEPS_LIST)
