@@ -1,6 +1,18 @@
 # tulip
 A 2-D game engine based upon SDL2. This attempt will try to incorporate the composition approach and may still use inheritance if and when it makes sense.
 
+# Patch notes v0.0.2
+
+## New Features
+  1. Added visio drawings (this doesn't quite work with git; I forgot git doesn't like binary files and I will figure something out).
+
+  2. Reorganized rendering into it's own module. Note that the threading portion of the user interface module has dependency on this, will likely need to decouple.
+
+  3. Changed Application Control to "user_interface" so as to more easily granularize the different modules and thus know where each submodule goes.
+
+## Known Issues.
+  * Most unit tests are broken. Expect hot-patch to fix.
+
 # Patch notes v0.0.1
 
 ## New Features
