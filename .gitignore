@@ -6,3 +6,4 @@ doc/latex/*
 doc/html
 doc/html/*
 .vscode
+*.code-workspace
