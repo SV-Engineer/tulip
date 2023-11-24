@@ -48,6 +48,11 @@ void timer_InitTimers(void* ctrl)
 void timer_KillTimers(void* param)
 {
   thread_vars_t* ctrl = (thread_vars_t*) param;
+
+  // for (auto i = ctrl->mutexes.begin(); i < ctrl->mutexes.end(); i++)
+  // {
+
+  // }
   SDL_mutexP(ctrl->mutexes[THREAD_RENDER]);
   SDL_mutexP(ctrl->mutexes[THREAD_INPUT]);
   SDL_mutexP(ctrl->mutexes[THREAD_IDLE]);

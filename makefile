@@ -3,7 +3,7 @@
 ############################################################################################
 CORE_DIR									= ./core
 COMMON_DIR								= $(CORE_DIR)/common
-APP_CTRL_DIR							= ./application_control
+UI_DIR										= ./user_interface
 OUTPUT_DIR								= ./obj
 UNIT_TESTS_SRC_DIR				= ./unit_tests
 DEBUG_DIR									= ./debug
@@ -12,14 +12,14 @@ SDL2_DIR									= $(CORE_DIR)/SDL2_Latest/i686-w64-mingw32
 ############################################################################################
 # Source Paths
 ############################################################################################
-APP_CTRL_SRC							= $(APP_CTRL_DIR)/src
+UI_SRC										= $(UI_DIR)/src
 COMMON_SRC								= $(COMMON_DIR)/src
 
 ############################################################################################
 # Include Paths
 ############################################################################################
 SDL2_INC									= $(SDL2_DIR)/include
-APP_CTRL_INC							= $(APP_CTRL_DIR)/inc
+UI_INC										= $(UI_DIR)/inc
 COMMON_INC								= $(COMMON_DIR)/inc
 DEBUG_INC									= $(DEBUG_DIR)/inc
 
@@ -38,8 +38,8 @@ CC_ARGS										= $(MAIN_CC_ARGS) -c -D DEBUG
 # Include Directory Compiler Arguments
 ############################################################################################
 INC_DIRS									= -I $(SDL2_INC)/SDL2 \
-														-I $(APP_CTRL_INC) \
-														-I $(COMMON_INC) \
+														-I $(UI_INC)        \
+														-I $(COMMON_INC)    \
 														-I $(DEBUG_INC)
 
 ############################################################################################
@@ -51,7 +51,7 @@ LINK_DIRS									= -L $(SDL2_DIR)/bin/ \
 ############################################################################################
 # Link Library Compiler Arguments
 ############################################################################################
-LINK_LIBS									= -l mingw32 \
+LINK_LIBS									= -l mingw32  \
 														-l SDL2main \
 														-l SDL2
 
@@ -64,18 +64,18 @@ UNIT_TEST = $(UT)
 ############################################################################################
 # Dependencies list for compilation.
 ############################################################################################
-DEPS_LIST = renderer \
-						events \
-						timers \
+DEPS_LIST = renderer    \
+						events      \
+						timers      \
 						thread_ctrl \
 						mouse_input
 
 ############################################################################################
 # Expected object files from compilation to provide to linker.
 ############################################################################################
-OBJ_FILES = $(OUTPUT_DIR)/renderer.o \
-						$(OUTPUT_DIR)/events.o \
-						$(OUTPUT_DIR)/timers.o \
+OBJ_FILES = $(OUTPUT_DIR)/renderer.o    \
+						$(OUTPUT_DIR)/events.o      \
+						$(OUTPUT_DIR)/timers.o      \
 						$(OUTPUT_DIR)/thread_ctrl.o \
 						$(OUTPUT_DIR)/mouse_input.o \
 						$(OUTPUT_DIR)/run_engine.o
@@ -97,19 +97,19 @@ test: unit_test engine
 # Dependency Recipes
 ############################################################################################
 timers:
-	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 renderer:
-	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 events:
-	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 mouse_input:
-	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 thread_ctrl:
-	$(CC) $(CC_ARGS) $(APP_CTRL_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
+	$(CC) $(CC_ARGS) $(UI_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
 # This and the unit_test dependency are mutually exclusive in compilation.
 run_engine: $(DEPS_LIST)
