@@ -6,7 +6,7 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile all UT=compilation
+ *        > mingw32-make makefile test UT=compilation
  */
 
 //Using SDL and standard IO

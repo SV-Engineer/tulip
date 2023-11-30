@@ -6,7 +6,7 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile all UT=draw_square
+ *        > mingw32-make makefile test UT=draw_square
  */
 
 #include <debug.hpp>
@@ -33,16 +33,11 @@ int unit_test(void)
   thread_deciders.kill                          = false;
   thread_deciders.sem                           = SDL_CreateSemaphore(0x1U);
   thread_deciders.engine_window                 = rend_CreateRenderer();
-  thread_deciders.update_screen                 = SDL_CreateCond();
-  thread_deciders.update_screen_mutex           = SDL_CreateMutex();
-  thread_deciders.renderTimerID                 = timer_InitRenderTimer((void*) &thread_deciders);
 
   if
   (
       (thread_deciders.sem == NULL)
    || (thread_deciders.engine_window == NULL)
-   || (thread_deciders.update_screen == NULL)
-   || (thread_deciders.update_screen_mutex == NULL)
   )
   {
     ERR("Semaphore or Engine Window or Condition Variable or Mutex not initialized.", SDL_GetError());
@@ -61,7 +56,7 @@ int unit_test(void)
     {
       if(SDL_SemTryWait(thread_deciders.sem) == SUCCESS)
       {
-        thread_deciders.kill = evt_PollEvent(e);
+        evt_PollEvent((thread_vars_t*) &thread_deciders);
         SDL_SemPost(thread_deciders.sem);
       }
 
@@ -69,6 +64,7 @@ int unit_test(void)
       {
         continue;
       }
+
     } while (!(thread_deciders.kill));
 
     INFO("Quit Event Detected");
