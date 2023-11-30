@@ -10,6 +10,9 @@ A 2-D game engine based upon SDL2. This attempt will try to incorporate the comp
 
   3. Changed Application Control to "user_interface" so as to more easily granularize the different modules and thus know where each submodule goes.
 
+  4. Hot-patches.
+      1. v0.0.2.1 - Removed visio file. It now lives on [google drive](https://drive.google.com/drive/folders/1e4nrK_8WwpWtN2_9AYjk2QZC2V8AnO7W?usp=sharing) in the "Drawings" folder.
+
 ## Known Issues.
   * Most unit tests are broken. Expect hot-patch to fix.
 
