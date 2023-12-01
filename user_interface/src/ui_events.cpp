@@ -1,14 +1,14 @@
-/** @file events.cpp
+/** @file ui_events.cpp
  * @author Autin (SV-Engineer)
- * @brief The source file for tulip event handling.
+ * @brief The source file for tulip user interface event handling.
  * 
- * @par This file contains the event handling for the tulip game engine.
+ * @par This file contains the UI event handling for the tulip game engine.
  * At this time for sanity checking purposes it serves to create an event
  * and also poll it to check for the quit request.
  * 
  */
 
-#include <events.hpp>
+#include <ui_events.hpp>
 
 // Helper function forward declaration.
 static inline void hlp_KillEvent(SDL_Event* e);

@@ -1,4 +1,4 @@
-/** @file mouse_input.hpp
+/** @file ui_mouse_input.hpp
  * @author Autin (SV-Engineer)
  * @brief The header file for tulip mouse input handling.
  * 

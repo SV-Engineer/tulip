@@ -1,4 +1,4 @@
-/** @file events.hpp
+/** @file ui_events.hpp
  * @author Autin (SV-Engineer)
  * @brief The header file for tulip event handling.
  * 
@@ -11,7 +11,7 @@
   // Dependencies
   #include <stdbool.h>
   #include <SDL.h>
-  #include <mouse_input.hpp>
+  #include <ui_mouse_input.hpp>
   #include <thread_ctrl.hpp>
 
   // Function declarations

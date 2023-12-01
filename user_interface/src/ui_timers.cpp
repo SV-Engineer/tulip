@@ -1,4 +1,4 @@
-/** @file timers.cpp
+/** @file ui_timers.cpp
  * @author Autin (SV-Engineer)
  * @brief The source file for tulip timers.
  * 
@@ -6,7 +6,7 @@
  * 
  */
 
-#include <timers.hpp>
+#include <ui_timers.hpp>
 
 // Forward declare helper functions
 uint32_t hlp_SignalRenderThread(uint32_t interval, void* param);

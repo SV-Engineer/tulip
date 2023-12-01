@@ -1,4 +1,4 @@
-/** @file timers.hpp
+/** @file ui_timers.hpp
  * @author Autin (SV-Engineer)
  * @brief The header file for tulip timers.
  * 

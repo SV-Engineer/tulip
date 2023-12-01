@@ -1,4 +1,4 @@
-/** @file mouse_input.cpp
+/** @file ui_mouse_input.cpp
  * @author Autin (SV-Engineer)
  * @brief The source file for tulip mouse input handling.
  * 
@@ -6,7 +6,7 @@
  * 
  */
 
-#include <mouse_input.hpp>
+#include <ui_mouse_input.hpp>
 
 mouse_input_t mouse_GetLocation(void)
 {
