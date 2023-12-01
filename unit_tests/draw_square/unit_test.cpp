@@ -46,6 +46,8 @@ int unit_test(void)
 
   else
   {
+    INFO("Starting timers");
+    timer_InitTimers((void*) &thread_deciders);
     // Start the rendering thread and detach it.
     INFO("Starting thread(s)");
     thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_RENDER), "rendering", (void*) &thread_deciders);
@@ -54,9 +56,9 @@ int unit_test(void)
     INFO("Entry to event polling thread. Polling exit event.");
     do
     {
-      if(SDL_SemTryWait(thread_deciders.sem) == SUCCESS)
+      if (SDL_SemTryWait(thread_deciders.sem) != SDL_MUTEX_TIMEDOUT)
       {
-        evt_PollEvent((thread_vars_t*) &thread_deciders);
+        evt_PollEvent((void*) &thread_deciders);
         SDL_SemPost(thread_deciders.sem);
       }
 

@@ -15,8 +15,15 @@
   #include <vector>
   #include <debug.hpp>
 
+  enum
+  {
+    E_IDLE,
+    E_INPUT,
+    E_RENDER
+  };
+
   // Function declarations
-  void timer_InitTimers(void*);
+  void timer_InitTimers(void*, uint32_t = 0xFFFFFFFFU);
   void timer_KillTimers(void*);
 
 #endif /* TULIP_TIMERS_H_ */

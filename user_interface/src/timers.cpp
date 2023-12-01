@@ -21,18 +21,19 @@ static void hlp_InitEventTimer(void*);
  * @brief This function initializes all timers relevant to running the engine.
  * 
  */
-void timer_InitTimers(void* ctrl)
+void timer_InitTimers(void* params, uint32_t timer_pos = 0xFFFFFFFFU)
 {
+  thread_vars_t* ctrl = (thread_vars_t*) params;
 
   // Create the needed mutexes.
-  ((thread_vars_t*) ctrl)->mutexes[THREAD_RENDER]       = SDL_CreateMutex();
-  ((thread_vars_t*) ctrl)->mutexes[THREAD_INPUT]        = SDL_CreateMutex();
-  ((thread_vars_t*) ctrl)->mutexes[THREAD_IDLE]       = SDL_CreateMutex();
+  ctrl->mutexes[THREAD_RENDER]       = (timer_pos & (0x1U << E_RENDER)) ? SDL_CreateMutex() : nullptr;
+  ctrl->mutexes[THREAD_INPUT]        = (timer_pos & (0x1U << E_INPUT))  ? SDL_CreateMutex() : nullptr;
+  ctrl->mutexes[THREAD_IDLE]         = (timer_pos & (0x1U << E_IDLE))   ? SDL_CreateMutex() : nullptr;
 
   // Create the needed signals.
-  ((thread_vars_t*) ctrl)->signal_update[THREAD_RENDER] = SDL_CreateCond();
-  ((thread_vars_t*) ctrl)->signal_update[THREAD_INPUT]  = SDL_CreateCond();
-  ((thread_vars_t*) ctrl)->signal_update[THREAD_IDLE] = SDL_CreateCond();
+  ctrl->signal_update[THREAD_RENDER] = (timer_pos & (0x1U << E_RENDER)) ? SDL_CreateCond()  : nullptr;
+  ctrl->signal_update[THREAD_INPUT]  = (timer_pos & (0x1U << E_INPUT))  ? SDL_CreateCond()  : nullptr;
+  ctrl->signal_update[THREAD_IDLE]   = (timer_pos & (0x1U << E_IDLE))   ? SDL_CreateCond()  : nullptr;
   // Initialize the timers.
   hlp_InitRenderTimer(ctrl);
   hlp_InitInputTimer(ctrl);
@@ -75,9 +76,19 @@ void timer_KillTimers(void* param)
  * @brief This function instantiates a timer used to signal the rendering thread to run.
  * 
  */
-static void hlp_InitRenderTimer(void* ctrl)
+static void hlp_InitRenderTimer(void* params)
 {
-  ((thread_vars_t*) ctrl)->timerIDs.push_back(SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalRenderThread, ctrl));
+  thread_vars_t* ctrl = (thread_vars_t*) params;
+  const std::string C_THREAD_NAME = THREAD_RENDER;
+  if ((ctrl->mutexes[C_THREAD_NAME] != nullptr) && (ctrl->signal_update[C_THREAD_NAME] != nullptr));
+  {
+    ctrl->timerIDs.push_back(SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalRenderThread, (void*) ctrl));
+    return;
+  }
+  else
+  {
+    return;
+  }
 } /* hlp_InitRenderTimer */
 
 /** @fn static void hlp_InitInputTimer(void* ctrl)
