@@ -160,7 +160,7 @@ rnd_timers:
 run_engine: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) $(COMMON_SRC)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/$@.o
 
-# Note that the object file this generates is the same as the run_engine dependency.
+# Note that the object file this generates is the same name as the run_engine dependency.
 unit_test: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/run_engine.o
 
