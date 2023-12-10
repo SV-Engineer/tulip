@@ -58,7 +58,6 @@
             break;
           }
 
-          // It is preffered to not leave undefined paths when possible.
           else
           {
             continue;

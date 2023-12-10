@@ -5,3 +5,12 @@
  * @par This file is the header for the rendering timers.
  * 
  */
+
+#ifndef RENDER_TIMERS_H_
+  #define RENDER_TIMERS_H_
+
+  #include <common_timers.hpp>
+
+  Timers_vect_t* rnd_init_timers(void);
+
+#endif
