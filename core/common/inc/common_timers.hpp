@@ -26,13 +26,15 @@
 
   class Tulip_timer
   {
+    private:
+      SDL_mutex* lock;
+      SDL_cond*  signal;
+
     public:
       //========================================================================
       // Public Member Variables
       //========================================================================
       SDL_TimerID Id;
-      SDL_mutex*  Lock;
-      SDL_cond*   Signal;
 
       //========================================================================
       // Public Member Functions
@@ -40,18 +42,43 @@
       // Constructor
       Tulip_timer(int duration_ms)
       {
-        this->Lock           = SDL_CreateMutex();
-        this->Signal         = SDL_CreateCond();
+        this->lock           = SDL_CreateMutex();
+        this->signal         = SDL_CreateCond();
         Id                   = SDL_AddTimer(duration_ms, signal_thread, (void*) this);
-      }
+      } /* constructor */
 
       // Destructor
-    ~Tulip_timer(void)
+      ~Tulip_timer(void)
       {
         SDL_RemoveTimer(Id);
-        SDL_DestroyCond(this->Signal);
-        SDL_DestroyMutex(this->Lock);
-      }
+        SDL_DestroyCond(this->signal);
+        SDL_DestroyMutex(this->lock);
+      } /* destructor */
+
+      int Try_get_lock(void)
+      {
+        return SDL_TryLockMutex(this->lock);
+      } /* Try_get_lock */
+
+      void Put_lock(void)
+      {
+        SDL_UnlockMutex(this->lock);
+      } /* Put_lock */
+
+      void Try_signal(void)
+      {
+        if (Try_get_lock() == SUCCESS)
+        {
+          SDL_CondSignal(this->signal);
+          Put_lock();
+          return;
+        }
+        else
+        {
+          return;
+        }
+      } /* Try_signal */
+
   };
 
   uint32_t signal_thread(uint32_t interval, void* param)
@@ -63,18 +90,10 @@
     #endif
 
     Tulip_timer* tulip_timer = (Tulip_timer*) param;
-    int status = 0;
-    //thread_vars_t* ctrl = (thread_vars_t*) param;
-    if (SDL_TryLockMutex (tulip_timer->Lock) == SUCCESS)
-    {
-      SDL_CondSignal(tulip_timer->Signal);
-      SDL_UnlockMutex(tulip_timer->Lock);
-      return interval;
-    }
-    else
-    {
-      return interval;
-    }
+
+    tulip_timer->Try_signal();
+
+    return interval;
   }
 
 #endif /* COMMON_THREADS_H_ */
