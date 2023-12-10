@@ -22,7 +22,7 @@
     E_RENDER
   };
 
-  uint32_t signal_thread(uint32_t interval, void* param);
+  static uint32_t hlp_signal_thread(uint32_t interval, void* param);
 
   class Tulip_timer
   {
@@ -44,7 +44,7 @@
       {
         this->lock           = SDL_CreateMutex();
         this->signal         = SDL_CreateCond();
-        Id                   = SDL_AddTimer(duration_ms, signal_thread, (void*) this);
+        Id                   = SDL_AddTimer(duration_ms, hlp_signal_thread, (void*) this);
       } /* constructor */
 
       // Destructor
@@ -81,7 +81,7 @@
 
   };
 
-  uint32_t signal_thread(uint32_t interval, void* param)
+  static uint32_t hlp_signal_thread(uint32_t interval, void* param)
   {
 
     #ifdef DEBUG
