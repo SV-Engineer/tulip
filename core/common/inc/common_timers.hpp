@@ -1,13 +1,13 @@
-/** @file common_threads.hpp
+/** @file common_timers.hpp
  * @author Autin (SV-Engineer)
- * @brief The header file for the Tulip threads template(s).
+ * @brief The header file for the Tulip generic timers.
  * 
- * @par This file contains the definition of the thread template function(s).
+ * @par This file contains the definition of the timers that will signal the threads.
  * 
  */
 
-#ifndef COMMON_THREADS_H_
-  #define COMMON_THREADS_H_
+#ifndef COMMON_TIMERS_H_
+  #define COMMON_TIMERS_H_
 
   #include <SDL.h>
   #include <debug.hpp>
@@ -22,7 +22,7 @@
     E_RENDER
   };
 
-  static uint32_t hlp_signal_thread(uint32_t interval, void* param);
+  uint32_t signal_thread(uint32_t interval, void* param);
 
   class Tulip_timer
   {
@@ -44,7 +44,7 @@
       {
         this->lock           = SDL_CreateMutex();
         this->signal         = SDL_CreateCond();
-        Id                   = SDL_AddTimer(duration_ms, hlp_signal_thread, (void*) this);
+        Id                   = SDL_AddTimer(duration_ms, signal_thread, (void*) this);
       } /* constructor */
 
       // Destructor
@@ -81,19 +81,4 @@
 
   };
 
-  static uint32_t hlp_signal_thread(uint32_t interval, void* param)
-  {
-
-    #ifdef DEBUG
-      INFO("Signalling Thread with timer:");
-      std::cout << interval << std::endl;
-    #endif
-
-    Tulip_timer* tulip_timer = (Tulip_timer*) param;
-
-    tulip_timer->Try_signal();
-
-    return interval;
-  }
-
-#endif /* COMMON_THREADS_H_ */
+#endif /* COMMON_TIMERS_H_ */
