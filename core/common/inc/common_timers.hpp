@@ -12,7 +12,7 @@
   #include <SDL.h>
   #include <debug.hpp>
   #include <string>
-  #include <vector>
+  #include <map>
 
   #define SDL_NO_TIMER_ID_ERR ((SDL_TimerID) 0x0)
 
@@ -82,17 +82,10 @@
 
   }; /* Tulip_timer */
 
-  // This is organized like this to avoid grabbing the entire class
-  // when looking for a specific one. This may change if this does
-  // not work the way I thought it did.
-  typedef struct Timer_instance
-  {
-    Tulip_timer* Handle;
-    std::string  Name;
-  } Timer_instance_t;
-  
-
   // Used to track the class handles
-  typedef std::vector<Timer_instance_t> Timers_vect_t;
+  typedef std::map <std::string, Tulip_timer*> Timers_t;
+
+  // Function Declarations
+  void timers_kill_timers (Timers_t*);
 
 #endif /* COMMON_TIMERS_H_ */

@@ -11,6 +11,6 @@
 
   #include <common_timers.hpp>
 
-  Timers_vect_t* rnd_init_timers(void);
+  Timers_t rnd_init_timers(void);
 
 #endif

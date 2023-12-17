@@ -1,14 +1,14 @@
-/** @file renderer.hpp
+/** @file rnd_screen.hpp
  * @author Autin (SV-Engineer)
- * @brief The header file for tulip rendering.
+ * @brief The header file for the screen rendering.
  * 
- * @par This file contains the header for the top level abstraction 
- * of rendering images to the screen.
+ * @par This file is the header for the screen rendering.
  * 
  */
 
-#ifndef TULIP_RENDERER_H_
-  #define TULIP_RENDERER_H_
+#ifndef RND_SCREEN_H_
+  #define RND_SCREEN_H_
+
   // Dependencies.
   #include <SDL.h>
   #include <string>
@@ -19,20 +19,20 @@
   #define DEFAULT_WINDOWED_SCREEN_HEIGHT   256
 
   // Types, Objects and Classes
-  class Screen
+  class Rnd_Screen
   {
     private:
-      SDL_Window*  window;
-      SDL_Surface* surface;
+      SDL_Window*   window;
+      SDL_Surface*  surface;
       SDL_Renderer* renderer;
 
-      /** @memberof Screen
+      /** @memberof Rnd_Screen
        * @fn SDL_Renderer* hlp_GetRendererDrivers(SDL_Window* w)
        * @brief This instantiates and returns a pointer to a heap
-       * allocated class containing an SDL window and surface.
+       * allocated struct containing an SDL window and surface.
        * 
        * @return SDL_Renderer*
-       * A pointer to an SDL_Renderer
+       * A pointer to an SDL_Renderer structure.
        * 
        * @return nullptr
        * Returns nullptr if renderer fails to initialize.
@@ -40,6 +40,8 @@
       SDL_Renderer* hlp_GetRendererDrivers(SDL_Window* w)
       {
         SDL_Renderer* r = nullptr;
+
+        // Search for the direct3d11 driver
         for (int i = 0; i < SDL_GetNumRenderDrivers(); i++)
         {
           // TIL that initializing a struct with empty curly braces is
@@ -51,16 +53,16 @@
           SDL_GetRenderDriverInfo(i, &r_info);
 
           // Check for direct3d11
-          if (r_info.name == std::string("direct3d11"))
+          if (!(r_info.name == std::string("direct3d11")))
           {
-            INFO("direct3d11 found");
-            r = SDL_CreateRenderer(w, i , 0);
-            break;
+            continue;
           }
 
           else
           {
-            continue;
+            INFO("direct3d11 found");
+            r = SDL_CreateRenderer(w, i , 0);
+            break;
           }
         }
 
@@ -79,7 +81,7 @@
 
     public:
       // Class constructor
-      Screen(void)
+      Rnd_Screen(void)
       {
         if(SDL_Init((SDL_INIT_EVERYTHING & ~(SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC | SDL_INIT_GAMECONTROLLER))) < 0)
         {
@@ -87,7 +89,6 @@
           window   = nullptr;
           surface  = nullptr;
           renderer = nullptr;
-
         }
 
         else
@@ -111,7 +112,7 @@
       } /* constructor */
 
       // Class destructor
-      ~Screen(void)
+      ~Rnd_Screen(void)
       {
         // Destroy Renderer
         if (renderer != NULL)
@@ -130,8 +131,8 @@
       // Object retrieval
       // ===============================================================
 
-      /** @memberof Screen
-       * @fn SDL_Window* Get_sdl_window(void)
+      /** @memberof Rnd_Screen
+       * @fn SDL_Window* Get_window(void)
        * @brief This returns a pointer to the instantiated window.
        * 
        * @return SDL_Window*
@@ -140,13 +141,13 @@
        * @return nullptr
        * Returns nullptr if window failed to initialize.
        */
-      SDL_Window* Get_sdl_window(void)
+      SDL_Window* Get_window(void)
       {
         return window;
-      } /* Get_sdl_window */
+      } /* Get_window */
 
-      /** @memberof Screen
-       * @fn SDL_Renderer* Get_sdl_renderer(void)
+      /** @memberof Rnd_Screen
+       * @fn SDL_Renderer* Get_renderer(void)
        * @brief This returns a pointer to the instantiated renderer.
        * 
        * @return SDL_Renderer*
@@ -155,15 +156,14 @@
        * @return nullptr
        * Returns nullptr if renderer failed to initialize.
        */
-      SDL_Renderer* Get_sdl_renderer(void)
+      SDL_Renderer* Get_renderer(void)
       {
         return renderer;
-      } /* Get_sdl_renderer */
+      } /* Get_renderer */
 
-  }; /* Screen */
+  }; /* Rnd_Screen */
 
-  // Function declarations.
-  Screen* rend_CreateRenderer(void);
-  void rend_KillRenderer(Screen* renderer);
+  // Function declarations
+  Rnd_Screen* rnd_init_renderer(void);
 
-#endif /* TULIP_RENDERER_H_ */
+#endif /* RND_SCREEN_H_ */
