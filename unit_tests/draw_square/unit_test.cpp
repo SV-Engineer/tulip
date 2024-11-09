@@ -6,11 +6,12 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile test UT=draw_square
+ *        > mingw32-make test UT=draw_square
  */
 
-#include <debug.hpp>
-#include <TULIP_ApplicationControl.hpp>
+#include "debug.hpp"
+#include "ui_events.hpp"
+#include "tulip.hpp"
 
 // Forward declare the unit test function.
 int unit_test(void);
@@ -47,10 +48,10 @@ int unit_test(void)
   else
   {
     INFO("Starting timers");
-    timer_InitTimers((void*) &thread_deciders);
+    timer_InitTimers((void*) &thread_deciders, 0xFFFFFFFFU);
     // Start the rendering thread and detach it.
     INFO("Starting thread(s)");
-    thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_RENDER), "rendering", (void*) &thread_deciders);
+    thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_THREAD_RENDER), "rendering", (void*) &thread_deciders);
     SDL_DetachThread(thread_process_render);
 
     INFO("Entry to event polling thread. Polling exit event.");

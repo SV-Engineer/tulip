@@ -72,7 +72,7 @@ UNIT_TEST = $(UT)
 ############################################################################################
 # Dependencies list for compilation.
 ############################################################################################
-COMMON_DEPS =		common_timers
+COMMON_DEPS =		common_timers     \
 
 UI_DEPS =				ui_events         \
 								ui_keyboard_input \
@@ -88,13 +88,13 @@ PHYSICS_DEPS =	phys_threads      \
 
 DEPS_LIST = 		$(COMMON_DEPS)    \
 								$(UI_DEPS)        \
-								$(RENDER_DEPS)    \
-								$(PHYSICS_DEPS)
+								$(RENDER_DEPS)
+#								$(PHYSICS_DEPS)
 
 ############################################################################################
 # Expected object files from compilation to provide to linker.
 ############################################################################################
-COMMON_OBJS =		$(OUTPUT_DIR)/common_timers.o
+COMMON_OBJS =		$(OUTPUT_DIR)/common_timers.o     \
 
 UI_OBJS		= 		$(OUTPUT_DIR)/ui_events.o         \
 								$(OUTPUT_DIR)/ui_keyboard_input.o \
@@ -110,8 +110,8 @@ PHYSICS_OBJS =	$(OUTPUT_DIR)/phys_threads.o      \
 
 OBJ_FILES =			$(COMMON_OBJS)                    \
 								$(UI_OBJS)                        \
-								$(RENDER_OBJS)                    \
-								$(PHYSICS_OBJS)
+								$(RENDER_OBJS)
+#								$(PHYSICS_OBJS)
 
 ############################################################################################
 # Compile the engine primary
@@ -175,7 +175,7 @@ tulip: $(DEPS_LIST)
 
 # Note that the object file this generates is the same name as the run_engine dependency.
 # $(DEPS_LIST)
-unit_test: $(COMMON_DEPS)
+unit_test: $(DEPS_LIST)
 	$(CC) $(CC_ARGS) $(UNIT_TESTS_SRC_DIR)/$(UNIT_TEST)/$@.cpp $(INC_DIRS) $(LINK_DIRS) $(LINK_LIBS) -o $(OUTPUT_DIR)/tulip.o
 
 # $(OBJ_FILES)

@@ -21,7 +21,7 @@ static void hlp_InitEventTimer(void*);
  * @brief This function initializes all timers relevant to running the engine.
  * 
  */
-void timer_InitTimers(void* params, uint32_t timer_pos = 0xFFFFFFFFU)
+void timer_InitTimers(void* params, uint32_t timer_pos)
 {
   thread_vars_t* ctrl = (thread_vars_t*) params;
 
@@ -85,10 +85,11 @@ static void hlp_InitRenderTimer(void* params)
     ctrl->timerIDs.push_back(SDL_AddTimer(16 /* 16.6 ms is 60 Hz*/, hlp_SignalRenderThread, (void*) ctrl));
     return;
   }
-  else
-  {
-    return;
-  }
+
+  // else
+  // {
+  //   return;
+  // }
 } /* hlp_InitRenderTimer */
 
 /** @fn static void hlp_InitInputTimer(void* ctrl)

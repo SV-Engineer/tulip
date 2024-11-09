@@ -11,19 +11,13 @@
 
   // Dependencies.
   #include <SDL.h>
-  #include <thread_ctrl.hpp>
   #include <vector>
-  #include <debug.hpp>
-
-  enum
-  {
-    E_IDLE,
-    E_INPUT,
-    E_RENDER
-  };
+  #include "common_timers.hpp"
+  #include "thread_ctrl.hpp"
+  #include "debug.hpp"
 
   // Function declarations
-  void timer_InitTimers(void*, uint32_t = 0xFFFFFFFFU);
+  void timer_InitTimers(void*, uint32_t);
   void timer_KillTimers(void*);
 
 #endif /* TULIP_TIMERS_H_ */

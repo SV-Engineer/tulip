@@ -18,7 +18,7 @@ uint32_t signal_thread(uint32_t interval, void* param)
 {
 
   #ifdef DEBUG
-    INFO("Signalling Thread with timer:");
+    INFO("function: signal_thread - Signalling Thread with timer:");
     std::cout << interval << std::endl;
   #endif
 

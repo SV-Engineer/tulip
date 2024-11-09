@@ -6,13 +6,14 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile test UT=common_timers
+ *        > mingw32-make test UT=common_timers
  */
 
 //Using SDL and standard IO
 #include <SDL.h>
 #include <stdio.h>
-#include <common_timers.hpp>
+#include "common_timers.hpp"
+#include "debug.hpp"
 
 //Screen dimension constants
 #define SCREEN_WIDTH     640
@@ -46,7 +47,8 @@ int test_timer(void)
   //Initialize SDL
   if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
   {
-    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    return FAILURE;
   }
   else
   {
@@ -55,6 +57,7 @@ int test_timer(void)
     if( window == NULL )
     {
       printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+      return FAILURE;
     }
     else
     {
@@ -80,5 +83,7 @@ int test_timer(void)
 
   //Quit SDL subsystems
   SDL_Quit();
+
+  return SUCCESS;
 
 } /* init_sdl */

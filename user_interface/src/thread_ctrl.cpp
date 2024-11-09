@@ -6,8 +6,8 @@
  * 
  */
 
-#include <thread_ctrl.hpp>
-#include <events.hpp>
+#include "thread_ctrl.hpp"
+#include "ui_events.hpp"
 
 // Forward declare functions
 static int thread_RenderScreen(void* thread_variables);
@@ -26,11 +26,11 @@ SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
   SDL_ThreadFunction tmp_thread = nullptr;
   switch (t)
   {
-    case E_RENDER:
+    case E_THREAD_RENDER:
       tmp_thread = (SDL_ThreadFunction) thread_RenderScreen;
       break;
 
-    case E_KB_INPUT:
+    case E_THREAD_KB_INPUT:
       tmp_thread = (SDL_ThreadFunction) thread_UserInput;
       break;
 
@@ -47,7 +47,7 @@ SDL_ThreadFunction thread_GetThreadPtr(thread_types_t t)
  * 
  * @par Use thread_GetThreadPtr to retrieve this thread.
  * See Also:
- *    * @ref E_KB_INPUT
+ *    * @ref E_THREAD_KB_INPUT
  *    * @ref threads_t
  * 
  * @return @ref SUCCESS
@@ -88,7 +88,7 @@ static int thread_UserInput(void* thread_variables)
  * 
  * @par Use thread_GetThreadPtr to retrieve this thread.
  * See Also:
- *    * @ref E_RENDER 
+ *    * @ref E_THREAD_RENDER 
  *    * @ref threads_t
  * 
  * @return @ref SUCCESS

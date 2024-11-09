@@ -14,9 +14,9 @@
   #include <vector>
   #include <map>
   #include <string>
-  #include <renderer.hpp>
-  #include <timers.hpp>
-  #include <mouse_input.hpp>
+  #include "renderer.hpp"
+  #include "common_timers.hpp"
+  #include "ui_mouse_input.hpp"
 
   // Macros and Defines
   #define THREAD_RENDER         ((const std::string) "render")
@@ -51,9 +51,10 @@
   /** @brief This enumerate tracks all of the available threads. */
   enum thread_types
   {
-    E_RENDER,
-    E_KB_INPUT,
-    E_NUM_THREADS
+    E_THREAD_RENDER,
+    E_THREAD_KB_INPUT,
+    E_THREAD_MOUSE_INPUT,
+    E_THREAD_NUM_THREADS
   };
 
   typedef thread_types thread_types_t;

@@ -6,12 +6,13 @@
  * To compile:
  *    1. Change directory to the top level (probably TULIP), but if not, whatever directory contains the makefile
  *    2. Use command:
- *        > mingw32-make makefile test UT=compilation
+ *        > mingw32-make test UT=compilation
  */
 
 //Using SDL and standard IO
 #include <SDL.h>
 #include <stdio.h>
+#include "debug.hpp"
 
 //Screen dimension constants
 #define SCREEN_WIDTH     640
@@ -22,7 +23,7 @@ int unit_test(void);
 
 int (*func_ptr)(void) = &unit_test;
 
-void init_sdl(void);
+int init_sdl(void);
 
 /** @fn int unit_test (void)
  * @brief The unit test function definition.
@@ -31,11 +32,10 @@ void init_sdl(void);
  */
 int unit_test(void)
 {
-  init_sdl();
-  return 0;
+  return init_sdl();
 } /* unit_test */
 
-void init_sdl(void)
+int init_sdl(void)
 {
   //The window we'll be rendering to
 	SDL_Window* window = NULL;
@@ -46,7 +46,8 @@ void init_sdl(void)
 	//Initialize SDL
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{
-		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    return FAILURE;
 	}
 	else
 	{
@@ -77,5 +78,7 @@ void init_sdl(void)
 
 	//Quit SDL subsystems
 	SDL_Quit();
+
+  return SUCCESS;
 
 } /* init_sdl */

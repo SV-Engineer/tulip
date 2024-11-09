@@ -1,4 +1,4 @@
-/** @file draw_square/unit_test.cpp
+/** @file mouse_tracking/unit_test.cpp
  * @author Autin (SV-Engineer)
  * @brief The unit test for following the mouse.
  * 
@@ -40,11 +40,11 @@ int unit_test(void)
 
   else
   {
-    timer_InitTimers((void*) &ctrl);
+    timer_InitTimers((void*) &ctrl, 0xFFFFFFFFU);
     // Start the rendering thread and detach it.
     INFO("Starting thread(s)");
-    thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_RENDER), "rendering",  (void*) &ctrl);
-    thread_process_input  = SDL_CreateThread(thread_GetThreadPtr(E_KB_INPUT), "kb_input", (void*) &ctrl);
+    thread_process_render = SDL_CreateThread(thread_GetThreadPtr(E_THREAD_RENDER), "rendering",  (void*) &ctrl);
+    thread_process_input  = SDL_CreateThread(thread_GetThreadPtr(E_THREAD_KB_INPUT), "kb_input", (void*) &ctrl);
     SDL_DetachThread(thread_process_render);
     SDL_DetachThread(thread_process_input);
 

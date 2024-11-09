@@ -12,7 +12,9 @@
   #include <stdbool.h>
   #include <SDL.h>
   #include <debug.hpp>
-  #include <ui_mouse_input.hpp>
+  #include "ui_mouse_input.hpp"
+  // TODO: UPDATE THREAD CONTROL
+  #include "thread_ctrl.hpp"
 
   // Function declarations
   SDL_Event* evt_CreateEvent(void);
